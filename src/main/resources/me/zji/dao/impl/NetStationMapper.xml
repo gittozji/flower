@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="me.zji.dao.NetStationDao">
+    <insert id="create" parameterType="NetStation">
+        INSERT INTO `netstation`(vc_netno, vc_netname, vc_address) VALUES (#{netNo}, #{netName}, #{address})
+    </insert>
+
+    <select id="queryByNetNo" parameterType="java.lang.String" resultType="NetStation">
+        SELECT <include refid="selectColumns" /> FROM netstation WHERE vc_netno = #{netNo}
+    </select>
+
+    <sql id="selectColumns">
+        id, vc_netno, vc_netname, vc_address
+    </sql>
+
+</mapper>

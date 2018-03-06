@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="me.zji.dao.BankAccoInfoDao">
+    <insert id="create" parameterType="BankAccoInfo">
+        INSERT INTO bankaccoinfo(vc_name, vc_personname, vc_bankname, vc_bankacco) VALUES (#{name}, #{personName}, #{bankName}, #{bankAcco})
+    </insert>
+
+    <select id="queryByBankAcco" parameterType="java.lang.String" resultType="BankAccoInfo">
+        SELECT <include refid="selectColumns" /> FROM bankaccoinfo WHERE vc_bankacco = #{bankAcco}
+    </select>
+
+    <sql id="selectColumns">
+        id, vc_name name, vc_personname personName, vc_bankname bankName, vc_bankacco bankAcco
+    </sql>
+
+</mapper>

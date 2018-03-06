@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="me.zji.dao.UserRoleDao">
+
+    <insert id="create" parameterType="UserRole">
+        INSERT INTO user_role (user_id, role_id) VALUES (#{userId}, #{roleId})
+    </insert>
+
+
+    <!-- 通过 UserRole例子 查询 -->
+    <select id="queryByExample" parameterType="UserRole" resultMap="userRoleResultMap">
+        select <include refid="selectColumns"/> from user_role ur, user u, role r
+        <where>
+            ur.user_id = u.id
+            and ur.role_id = r.id
+            <if test="userId != null and userId != ''">
+                and ur.user_id = #{userId}
+            </if>
+            <if test="roleId != null and roleId != ''">
+                and ur.role_id = #{roleId}
+            </if>
+        </where>
+    </select>
+
+    <!-- 通过用户名查询 -->
+    <select id="queryByUsername" parameterType="java.lang.String" resultMap="userRoleResultMap">
+        select <include refid="selectColumns"/> from user_role ur, user u, role r
+        where
+            ur.user_id = u.id
+            and ur.role_id = r.id
+            and u.username = #{username}
+    </select>
+
+    <!-- 查询字段 -->
+    <sql id="selectColumns">
+        ur.id, ur.user_id, ur.role_id,
+        u.id u_id, u.username u_username, u.type,
+        r.id r_id, r.code r_code, r.description r_description
+    </sql>
+    <!-- 查询结果返回集 -->
+    <resultMap id="userRoleResultMap" type="UserRole">
+        <id property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="roleId" column="role_id"/>
+        <association property="user" javaType="User">
+            <id property="id" column="u_id"/>
+            <result property="username" column="u_username"/>
+            <result property="type" column="u_type"/>
+        </association>
+        <association property="role" javaType="Role">
+            <id property="id" column="r_id"/>
+            <result property="code" column="r_code"/>
+            <result property="description" column="r_description"/>
+        </association>
+    </resultMap>
+</mapper>

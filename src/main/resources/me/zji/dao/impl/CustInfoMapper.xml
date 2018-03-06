@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="me.zji.dao.CustInfoDao">
+    <select id="create" parameterType="java.util.Map" statementType="CALLABLE">
+        {
+        call sp_addCustInfo(#{custType},#{custName},#{identityNo},
+        #{taCode},#{mobile},#{email},#{address},#{bankName},#{bankAcco},#{password},
+        #{custNo,mode=OUT,jdbcType=VARCHAR},#{taAcco,mode=OUT,jdbcType=VARCHAR},#{tradeAcco,mode=OUT,jdbcType=VARCHAR})
+        }
+    </select>
+
+    <select id="queryByIdentityNo" parameterType="java.lang.String" resultType="CustInfo">
+        SELECT <include refid="selectColumns" /> FROM custinfo WHERE vc_identityno = #{identityNo}
+    </select>
+
+    <select id="queryByCustNo" parameterType="java.lang.String" resultType="CustInfo">
+        SELECT <include refid="selectColumns" /> FROM custinfo WHERE vc_custno = #{CustNo}
+    </select>
+
+    <select id="queryByUsername" parameterType="java.lang.String" resultType="CustInfo">
+        SELECT <include refid="selectColumns" /> FROM custinfo WHERE username = #{username}
+    </select>
+
+    <update id="update" parameterType="CustInfo">
+        UPDATE custinfo SET username = #{userName} WHERE vc_custno = #{custNo}
+    </update>
+
+    <sql id="selectColumns">
+        id, username,  vc_custno custNo, c_custtype custType, vc_custname custName, vc_identityno identityNo,
+        vc_tacode taCode, mobile, email, address, vc_opendate openDate
+    </sql>
+
+</mapper>

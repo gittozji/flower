@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="me.zji.dao.StaticTradeBalanceDao">
+    <insert id="create" parameterType="StaticTradeBalance">
+        INSERT INTO statictradebalance(vc_tradeacco, c_moneytype, en_balance, en_enbalance, en_imbalance)
+          VALUES (#{tradeAcco}, #{moneyType}, #{balance}, #{enBalance}, #{imBalance})
+    </insert>
+
+    <update id="update" parameterType="StaticTradeBalance">
+        UPDATE statictradebalance SET en_balance = #{balance}, en_enbalance = #{enBalance}, en_imbalance = #{imBalance}
+          WHERE vc_tradeacco = #{tradeAcco} and c_moneytype = #{moneyType}
+    </update>
+
+    <select id="queryByTradeAccoAndMoneyType" parameterType="StaticTradeBalance" resultType="StaticTradeBalance">
+        SELECT <include refid="selectColumns" /> FROM statictradebalance
+        <where>
+            1 = 1
+            <if test="tradeAcco != null and tradeAcco != ''">
+                and vc_tradeacco = #{tradeAcco}
+            </if>
+            <if test="moneyType != null and moneyType != ''">
+                and c_moneyType = #{moneyType}
+            </if>
+        </where>
+    </select>
+
+    <sql id="selectColumns">
+        id, vc_tradeacco tradeAcco, c_moneytype moneyType, en_balance balance, en_enbalance enBalance, en_imbalance imBalance
+    </sql>
+
+</mapper>

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <meta charset="UTF-8"/>
+    <title>管理员首页</title>
+    <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+    <link type="text/css" rel="stylesheet" th:href="@{/resources/css/materialize.min.css}"  media="screen,projection"/>
+    <link type="text/css" rel="stylesheet" th:href="@{/resources/css/base_layout.css}"  media="screen,projection"/>
+    <link type="text/css" rel="stylesheet" th:href="@{/resources/css/admin_process.css}"  media="screen,projection"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</head>
+<body>
+<div class="navbar-fixed">
+    <nav>
+        <div class="nav-wrapper">
+            <a href="#!" class="brand-logo"><i class="material-icons">cloud_queue</i>基金交易系统</a>
+            <ul class="right">
+                <li><a th:href="@{/admin/index.html}"><i class="material-icons left">account_balance</i>当前状态</a></li>
+                <li class="active" shiro:hasRole="admin_trade"><a th:href="@{/admin/trade/index.html}"><i class="material-icons left">gavel</i>业务交易</a></li>
+                <li shiro:hasRole="admin_maintain"><a th:href="@{/admin/maintain/index.html}"><i class="material-icons left">view_quilt</i>业务维护</a></li>
+                <li shiro:hasRole="admin_process"><a th:href="@{/admin/process/index.html}"><i class="material-icons left">call_merge</i>流程控制</a></li>
+                <li shiro:hasRole="admin_user"><a th:href="@{/admin/user/index.html}"><i class="material-icons left">vpn_key</i>系统管理</a></li>
+                <li th:if="${session.user != null}">
+                    <a class="dropdown-button nav-user" href="#!" data-activates="dropdown_id"><i class="material-icons left">person</i><span th:text="${session.user.nikename}"></span><i class="material-icons right">arrow_drop_down</i></a>
+                    <ul id="dropdown_id" class="dropdown-content">
+                        <li><a th:href="@{/login.html}">重新登录</a></li>
+                        <li><a th:href="@{/anon/dologout.do}">安全退出</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#!">个人页面</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</div>
+
+<div class="row main-container">
+    <!-- 次级导航栏 -->
+    <div class="col s2 main-container-nav">
+        <a th:href="@{/admin/trade/offertobuy.html}"><div class="main-container-nav-item">认购</div></a>
+        <a th:href="@{/admin/trade/applytobuy.html}"><div class="main-container-nav-item">申购</div></a>
+        <a th:href="@{/admin/trade/atonefor.html}"><div class="main-container-nav-item">赎回</div></a>
+        <a th:href="@{/admin/trade/income.html}"><div class="main-container-nav-item">资金存入</div></a>
+        <a th:href="@{/admin/trade/expend.html}"><div class="main-container-nav-item">资金支出</div></a>
+        <a th:href="@{/admin/trade/accoopen.html}"><div class="main-container-nav-item">开户</div></a>
+    </div>
+    <!-- 主内容 -->
+</div>
+
+<script type="text/javascript" th:src="@{/resources/js/jquery.min.js}"></script>
+<script type="text/javascript" th:src="@{/resources/js/materialize.min.js}"></script>
+<script type="text/javascript" th:src="@{/resources/js/jquery.validate.js}"></script>
+<script type="text/javascript" th:src="@{/resources/js/jquery.metadata.js}"></script>
+<script type="text/javascript" th:src="@{/resources/js/additional-methods.js}"></script>
+<script type="text/javascript" th:src="@{/resources/js/utils.js}"></script>
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+
+    /*-------------------------------------------
+     |                页 面 渲 染               |
+     ============================================*/
+    $(document).ready(function(){
+        var selectItemMap = /*[[${selectItemMap}]]*/"";
+        // 处理网点
+        {
+            var taCodeSelect = selectItemMap.taCodeSelect;
+            var taCodeSelectOptions = "";
+            for(var i = 0; i < taCodeSelect.length; i ++) {
+                taCodeSelectOptions += "<option value='" + taCodeSelect[i].item + "'>" + taCodeSelect[i].caption + "</option>";
+            }
+            $("#taCode_id").empty();
+            $("#taCode_id").append(taCodeSelectOptions);
+        }
+
+        // 处理清算账户
+        {
+            var bankAccoSelect = selectItemMap.bankAccoSelect;
+            var bankAccoSelectOptions = "";
+            for(var i = 0; i < bankAccoSelect.length; i ++) {
+                var element = bankAccoSelect[i];
+                if (element == null){
+                    continue;
+                }
+                bankAccoSelectOptions += "<option value='" + element.item + "'>" + element.caption + "</option>";
+            }
+            $("#bankAcco_id").empty();
+            $("#bankAcco_id").append(bankAccoSelectOptions);
+        }
+
+        $('.datepicker').pickadate({
+            selectMonths: true,
+            selectYears: 15,
+            'format':'yyyy-mm-dd'
+        });
+    });
+
+    $(document).ready(function(){
+        /** 表单提交 */
+        $("#addForm").validate({
+            submitHandler: function (form) {
+                $("#commit_id").addClass("disabled");
+                $.ajaxSetup({contentType: "application/json; charset=utf-8"});
+                var actionUrl = /*[[@{/admin/maintain/addproductinfo.json}]]*/"";
+                var params = $(form).serializeJson();
+                $.post(actionUrl, JSON.stringify(params), function (response) {
+                    if(response.resultCode == 1) { // 成功
+                        Materialize.toast('添加成功', 3000,'',function() {
+                            $("#commit_id").removeClass("disabled");
+                            window.location.reload(); //成功后刷新界面
+                        });
+                    } else { // 失败
+                        Materialize.toast(response.errorInfo, 3000,'',function(){
+                            $("#commit_id").removeClass("disabled");
+                        });
+                    }
+                });
+            }
+        });
+
+    });
+    /*]]>*/
+</script>
+</body>
+</html>

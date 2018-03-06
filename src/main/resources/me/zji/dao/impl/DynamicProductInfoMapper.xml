@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="me.zji.dao.DynamicProductInfoDao">
+    <insert id="create" parameterType="DynamicProductInfo">
+        INSERT INTO dynamicproductinfo(vc_productcode, en_stnav)
+        VALUES (#{productCode}, #{stnav})
+    </insert>
+
+    <update id="update" parameterType="DynamicProductInfo">
+        UPDATE dynamicproductinfo SET en_stnav = #{stnav}
+        WHERE vc_productcode = #{productCode}
+    </update>
+
+    <select id="queryByProductCode" parameterType="java.lang.String" resultType="DynamicProductInfo">
+        SELECT <include refid="selectColumns" /> FROM dynamicproductinfo WHERE vc_productcode = #{productCode}
+    </select>
+
+    <sql id="selectColumns">
+        id, vc_productcode productCode, en_stnav stnav
+    </sql>
+
+</mapper>

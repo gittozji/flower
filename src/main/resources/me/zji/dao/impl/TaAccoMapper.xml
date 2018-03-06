@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="me.zji.dao.TaAccoDao">
+
+    <select id="queryByCustNo" parameterType="java.lang.String" resultType="TaAcco">
+        SELECT <include refid="selectColumns" /> FROM taacco WHERE vc_custno = #{custNo}
+    </select>
+
+    <select id="queryByTaAcco" parameterType="java.lang.String" resultType="TaAcco">
+        SELECT <include refid="selectColumns" /> FROM taacco WHERE vc_taacco = #{taAcco}
+    </select>
+
+    <sql id="selectColumns">
+        id, vc_taacco taAcco, vc_custno custNo, vc_tacode taCode, vc_opendate openDate
+    </sql>
+
+</mapper>

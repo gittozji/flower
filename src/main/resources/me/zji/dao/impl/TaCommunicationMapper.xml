@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="me.zji.dao.TaCommunicationDao">
+    <select id="create" parameterType="TaCommunication" statementType="CALLABLE">
+        {
+            call sp_addTaCommunication(#{taCode},#{taAcco},#{productCode},#{businFlag},#{tradeAcco},#{moneyType},#{balance},#{share},#{stnav},#{serialNo,mode=OUT,jdbcType=VARCHAR})
+        }
+    </select>
+
+    <select id="queryByExample" parameterType="TaCommunication" resultType="TaCommunication">
+        SELECT <include refid="selectColumns" /> FROM tacommunication
+        <where>
+            <if test="id != null and id != ''">
+                and id = #{id}
+            </if>
+            <if test="taCode != null and taCode != ''">
+                and vc_tacode = #{taCode}
+            </if>
+            <if test="taAcco != null and taAcco != ''">
+                and vc_taacco = #{taAcco}
+            </if>
+            <if test="productCode != null and productCode != ''">
+                and vc_productcode = #{productCode}
+            </if>
+            <if test="businFlag != null and businFlag != ''">
+                and c_businflag = #{businFlag}
+            </if>
+            <if test="status != null and status != ''">
+                and c_status = #{status}
+            </if>
+            <if test="serialNo != null and serialNo != ''">
+                and vc_serialno = #{serialNo}
+            </if>
+            <if test="occurDate != null and occurDate != ''">
+                and vc_occurdate = #{occurDate}
+            </if>
+            <if test="tradeAcco != null and tradeAcco != ''">
+                and vc_tradeacco = #{tradeAcco}
+            </if>
+            <if test="moneyType != null and moneyType != ''">
+                and c_moneytype = #{moneyType}
+            </if>
+            <if test="balance != null and balance != ''">
+                and en_balance = #{balance}
+            </if>
+            <if test="share != null and share != ''">
+                and en_share = #{share}
+            </if>
+            <if test="stnav != null and stnav != ''">
+                and en_stnav = #{stnav}
+            </if>
+        </where>
+    </select>
+
+    <update id="updateStatusByserialNo" parameterType="TaCommunication">
+        UPDATE tacommunication SET c_status = #{status} WHERE vc_serialno = #{serialNo}
+    </update>
+
+    <sql id="selectColumns">
+        id, vc_tacode taCode, vc_taacco taAcco, vc_productcode productCode,
+         c_businflag businFlag, c_status status, vc_serialno serialNo, vc_occurdate occurDate,
+         vc_tradeacco tradeAcco, c_moneytype moneyType, en_balance balance, en_share share, en_stnav stnav
+    </sql>
+</mapper>

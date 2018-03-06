@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <meta charset="UTF-8"/>
+    <title>管理员首页</title>
+    <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+    <link type="text/css" rel="stylesheet" th:href="@{/resources/css/materialize.min.css}"  media="screen,projection"/>
+    <link type="text/css" rel="stylesheet" th:href="@{/resources/css/base_layout.css}"  media="screen,projection"/>
+    <link type="text/css" rel="stylesheet" th:href="@{/resources/css/admin_process.css}"  media="screen,projection"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</head>
+<body>
+    <div class="navbar-fixed">
+        <nav>
+            <div class="nav-wrapper">
+                <a href="#!" class="brand-logo"><i class="material-icons">cloud_queue</i>基金交易系统</a>
+                <ul class="right">
+                    <li><a th:href="@{/admin/index.html}"><i class="material-icons left">account_balance</i>当前状态</a></li>
+                    <li shiro:hasRole="admin_trade"><a th:href="@{/admin/trade/index.html}"><i class="material-icons left">gavel</i>业务交易</a></li>
+                    <li shiro:hasRole="admin_maintain"><a th:href="@{/admin/maintain/index.html}"><i class="material-icons left">view_quilt</i>业务维护</a></li>
+                    <li class="active" shiro:hasRole="admin_process"><a th:href="@{/admin/process/index.html}"><i class="material-icons left">call_merge</i>流程控制</a></li>
+                    <li shiro:hasRole="admin_user"><a th:href="@{/admin/user/index.html}"><i class="material-icons left">vpn_key</i>系统管理</a></li>
+                    <li th:if="${session.user != null}">
+                        <a class="dropdown-button nav-user" href="#!" data-activates="dropdown_id"><i class="material-icons left">person</i><span th:text="${session.user.nikename}"></span><i class="material-icons right">arrow_drop_down</i></a>
+                        <ul id="dropdown_id" class="dropdown-content">
+                            <li><a th:href="@{/login.html}">重新登录</a></li>
+                            <li><a th:href="@{/anon/dologout.do}">安全退出</a></li>
+                            <li class="divider"></li>
+                            <li><a href="#!">个人页面</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </div>
+
+    <div class="row main-container">
+        <!-- 次级导航栏 -->
+        <div class="col s2 main-container-nav">
+            <a th:href="@{/admin/process/edit.html}"><div class="main-container-nav-item main-container-nav-item-active">设置系统流程</div></a>
+            <a th:href="@{/admin/process/guide.html}"><div class="main-container-nav-item">流程指南</div></a>
+        </div>
+        <!-- 主内容 -->
+        <div class="col s10 offset-s2">
+            <div class="container">
+                <div class="card z-depth-4 main-card">
+                    <div class="card-content">
+                        <span class="card-title">控制系统流程</span>
+                        <div class="row">
+                            <button id="day_init_id" class="green accent-4 col s2 offset-s5 waves-effect waves-light btn-large">日初始化</button>
+                            <img class="col s2 offset-s5" th:src="@{/resources/images/arrow_1.png}"/>
+                            <button id="receive_market_id" class="green accent-4 col s2 offset-s5 waves-effect waves-light btn-large">接收行情</button>
+                            <img class="col s8 offset-s2" th:src="@{/resources/images/arrow_3.png}"/>
+                            <button id="import_data_id" class="green accent-4 col s2 offset-s2 waves-effect waves-light btn-large">导入确认数据</button>
+                            <button id="start_tuxedo_id" class="col s2 offset-s4 waves-effect waves-light btn-large">启动交易</button>
+                            <img class="col s2 offset-s2" th:src="@{/resources/images/arrow_1.png}"/>
+                            <img class="col s2 offset-s4" th:src="@{/resources/images/arrow_1.png}"/>
+                            <button id="deal_data_id" class="green accent-4 col s2 offset-s2 waves-effect waves-light btn-large">处理确认数据</button>
+                            <button id="down_tuxedo_id" class="disabled col s2 offset-s4 waves-effect waves-light btn-large">停止柜台交易</button>
+                            <img class="col s2 offset-s2" th:src="@{/resources/images/arrow_2.png}"/>
+                            <img class="col s2 offset-s4" th:src="@{/resources/images/arrow_1.png}"/>
+                            <button class="disabled col s2 offset-s2 btn-large"></button>
+                            <button id="check_data_id" class="disabled col s2 offset-s4 waves-effect waves-light btn-large">交易预处理</button>
+                            <img class="col s2 offset-s2" th:src="@{/resources/images/arrow_2.png}"/>
+                            <img class="col s2 offset-s4" th:src="@{/resources/images/arrow_1.png}"/>
+                            <button class="disabled col s2 offset-s2 btn-large"></button>
+                            <button id="exp_request_id" class="disabled col s2 offset-s4 waves-effect waves-light btn-large">导出申请数据</button>
+                            <img class="col s8 offset-s2" th:src="@{/resources/images/arrow_4.png}"/>
+                            <button id="liqcarry_over_id" class="disabled col s2 offset-s5 waves-effect waves-light btn-large">清算结转</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript" th:src="@{/resources/js/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{/resources/js/materialize.min.js}"></script>
+    <script type="text/javascript" th:src="@{/resources/js/jquery.validate.js}"></script>
+    <script type="text/javascript" th:src="@{/resources/js/jquery.metadata.js}"></script>
+    <script type="text/javascript" th:src="@{/resources/js/additional-methods.js}"></script>
+    <script type="text/javascript" th:src="@{/resources/js/utils.js}"></script>
+
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        $(document).ready(function(){
+
+            /*-------------------------------------------
+             |           全 局 变 量 定 义 区           |
+             ============================================*/
+
+            /** 流程数据 */
+            var dealProcessMap = /*[[${dealProcessMap}]]*/"";
+            var codeList = [
+                'dayinit',
+                'receivemarket',
+                'starttuxedo',
+                'downtuxedo',
+                'checkdata',
+                'exprequest',
+                'importdata',
+                'dealdata',
+                'liqcarryover'
+            ]
+
+            var codeToIdDict = {
+                dayinit: 'day_init_id',
+                receivemarket: 'receive_market_id',
+                starttuxedo: 'start_tuxedo_id',
+                downtuxedo: 'down_tuxedo_id',
+                checkdata: 'check_data_id',
+                exprequest: 'exp_request_id',
+                importdata: 'import_data_id',
+                dealdata: 'deal_data_id',
+                liqcarryover: 'liqcarry_over_id'
+            }
+
+
+            /*-------------------------------------------
+             |              方 法 调 用 区              |
+             ============================================*/
+
+            setDealProcess();
+
+            /*-------------------------------------------
+             |              方 法 定 义 区              |
+             ============================================*/
+
+            /**
+             * 设置按钮状态
+             */
+            function setDealProcess() {
+                for (var i = 0; i < codeList.length; i ++) {
+                    var dealProcess = dealProcessMap[codeList[i]];
+                    $("#"+codeToIdDict[codeList[i]]).removeClass("green accent-4 accent-2 disabled");
+                    if (dealProcess.state == 0) { // 未执行
+                        $("#"+codeToIdDict[codeList[i]]).addClass("disabled");
+                    } else if (dealProcess.state == 1) { // 执行中
+                        $("#"+codeToIdDict[codeList[i]]).addClass("green accent-2");
+                    } else { // 执行完毕
+                        $("#"+codeToIdDict[codeList[i]]).addClass("green accent-4");
+                    }
+                }
+
+                /** 设置为引导点击样式 */
+                if (dealProcessMap['dayinit'].state == 0) {
+                    $("#day_init_id").removeClass("green accent-4 accent-2 disabled");
+                }
+                if (dealProcessMap['dayinit'].state == 2 && dealProcessMap['receivemarket'].state == 0) {
+                    $("#receive_market_id").removeClass("green accent-4 accent-2 disabled");
+                }
+                if (dealProcessMap['receivemarket'].state == 2 && dealProcessMap['importdata'].state == 0) {
+                    $("#import_data_id").removeClass("green accent-4 accent-2 disabled");
+                }
+                if (dealProcessMap['importdata'].state == 2 && dealProcessMap['dealdata'].state == 0) {
+                    $("#deal_data_id").removeClass("green accent-4 accent-2 disabled");
+                }
+                if (dealProcessMap['receivemarket'].state == 2 && dealProcessMap['starttuxedo'].state == 0) {
+                    $("#start_tuxedo_id").removeClass("green accent-4 accent-2 disabled");
+                }
+                if (dealProcessMap['starttuxedo'].state == 2 && dealProcessMap['downtuxedo'].state == 0) {
+                    $("#down_tuxedo_id").removeClass("green accent-4 accent-2 disabled");
+                }
+                if (dealProcessMap['downtuxedo'].state == 2 && dealProcessMap['checkdata'].state == 0) {
+                    $("#check_data_id").removeClass("green accent-4 accent-2 disabled");
+                }
+                if (dealProcessMap['checkdata'].state == 2 && dealProcessMap['exprequest'].state == 0) {
+                    $("#exp_request_id").removeClass("green accent-4 accent-2 disabled");
+                }
+                if (dealProcessMap['exprequest'].state == 2 && dealProcessMap['dealdata'].state == 2 && dealProcessMap['liqcarryover'].state == 0) {
+                    $("#liqcarry_over_id").removeClass("green accent-4 accent-2 disabled");
+                }
+            }
+
+            /** 日初始化 */
+            $("#day_init_id").click(function(){
+                doAjax($("#day_init_id"), dealProcessMap['dayinit'].procedurCode);
+            });
+
+            /** 接收行情 */
+            $("#receive_market_id").click(function(){
+                doAjax($("#receive_market_id"), dealProcessMap['receivemarket'].procedurCode);
+            });
+
+            /** 导入确认数据 */
+            $("#import_data_id").click(function(){
+                doAjax($("#import_data_id"), dealProcessMap['importdata'].procedurCode);
+            });
+
+            /** 启动交易 */
+            $("#start_tuxedo_id").click(function(){
+                doAjax($("#start_tuxedo_id"), dealProcessMap['starttuxedo'].procedurCode);
+            });
+
+            /** 处理确认数据 */
+            $("#deal_data_id").click(function(){
+                doAjax($("#deal_data_id"), dealProcessMap['dealdata'].procedurCode);
+            });
+
+            /** 停止柜台交易 */
+            $("#down_tuxedo_id").click(function(){
+                doAjax($("#down_tuxedo_id"), dealProcessMap['downtuxedo'].procedurCode);
+            });
+
+            /** 交易预处理 */
+            $("#check_data_id").click(function(){
+                doAjax($("#check_data_id"), dealProcessMap['checkdata'].procedurCode);
+            });
+
+            /** 导出申请数据 */
+            $("#exp_request_id").click(function(){
+                doAjax($("#exp_request_id"), dealProcessMap['exprequest'].procedurCode);
+            });
+
+            /** 清算结转 */
+            $("#liqcarry_over_id").click(function(){
+                doAjax($("#liqcarry_over_id"), dealProcessMap['liqcarryover'].procedurCode);
+            });
+
+            /** 服务请求 */
+            function doAjax(buttonObject, procedurCode) {
+                buttonObject.addClass("disabled");
+                if (!(buttonObject.hasClass('green accent-4') || buttonObject.hasClass('green accent-2'))) { // 投机取巧，通过css样式进行合法性判断
+                    Materialize.toast('提交申请...', 2000,'');
+                    $.ajaxSetup({contentType: "application/json; charset=utf-8"});
+                    var actionUrl = /*[[@{/admin/process/doedit.json}]]*/"";
+                    var params = $.extend({},{procedurCode : procedurCode});
+                    $.post(actionUrl, JSON.stringify(params), function (response) {
+                        if(response.resultCode == 1) { // 成功
+                            Materialize.toast('设置成功', 2000,'',function() {
+                                buttonObject.removeClass("disabled");
+                            });
+                            window.location.reload(); //成功后刷新界面
+                        } else { // 失败
+                            Materialize.toast(response.errorInfo, 2000,'',function(){
+                                buttonObject.removeClass("disabled");
+                            });
+                        }
+                    });
+                } else {
+                    Materialize.toast('操作失败', 2000,'',function(){
+                        buttonObject.removeClass("disabled");
+                    });
+                }
+            }
+
+        });
+        /*]]>*/
+    </script>
+</body>
+</html>

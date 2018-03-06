@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <meta charset="UTF-8"/>
+    <title>7*24小时页面</title>
+    <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+    <link type="text/css" rel="stylesheet" th:href="@{/resources/css/materialize.min.css}"  media="screen,projection"/>
+    <link type="text/css" rel="stylesheet" th:href="@{/resources/css/base_layout.css}"  media="screen,projection"/>
+    <link type="text/css" rel="stylesheet" th:href="@{/resources/css/admin_process.css}"  media="screen,projection"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</head>
+<body>
+<div class="navbar-fixed">
+    <nav>
+        <div class="nav-wrapper">
+            <a href="#!" class="brand-logo"><i class="material-icons">cloud_queue</i>7*24小时自助渠道</a>
+            <ul class="right">
+                <li th:if="${session.user != null}">
+                    <a class="dropdown-button nav-user" href="#!" data-activates="dropdown_id"><i class="material-icons left">person</i><span th:text="${session.user.nikename}"></span><i class="material-icons right">arrow_drop_down</i></a>
+                    <ul id="dropdown_id" class="dropdown-content">
+                        <li><a th:href="@{/login.html}">重新登录</a></li>
+                        <li><a th:href="@{/anon/dologout.do}">安全退出</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#!">个人页面</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</div>
+
+
+<div th:if="${custInfo == null}" class="row container main-container">
+    <div class="card z-depth-1 col s12">
+        <div class="card-content row">
+            <span class="card-title">您还未绑定客户编号，请先绑定</span>
+            <form id="bindForm" th:action="@{/custom/dobind.do}" class="row main-card-content" method="post" autocomplete="off">
+                <div class="col s12">
+                    <label for="bindForm_custNo_id">客户编号</label>
+                    <input id="bindForm_custNo_id" type="text" class="required" name="custNo">
+                    </input>
+                </div>
+                <div class="col s12">
+                    <label for="bindForm_tradeAcco_id">交易账号</label>
+                    <input id="bindForm_tradeAcco_id" type="text" class="required" name="tradeAcco">
+                    </input>
+                </div>
+                <div class="col s12">
+                    <label for="bindForm_password_id">密码</label>
+                    <input id="bindForm_password_id" type="password" class="required" minlength="4" maxlength="20" name="password"/>
+                </div>
+                <div class="row">
+                    <button class="btn waves-effect waves-light col s6 offset-s3">提交绑定</button>
+                </div>
+            </form>
+            <p style="color: #d72828; font-size: 12px;" class="col s12" th:if="${errorInfo != null}" th:text="${errorInfo}"></p>
+        </div>
+    </div>
+
+</div>
+
+
+<div th:if="${custInfo != null}" class="row main-container">
+    <div class="row main-container col s4 offset-s1">
+        <!-- 主内容 -->
+        <div class="card z-depth-1 col s12">
+            <div class="card-content row">
+                <span class="card-title">自助认购</span>
+                <form id="offerForm" class="row main-card-content" method="post" autocomplete="off">
+                    <div class="col s12">
+                        <label for="offerForm_productCode_id">产品名称</label>
+                        <select id="offerForm_productCode_id" class="browser-default select-box required" type="text" name="productCode">
+                        </select>
+                    </div>
+                    <div class="col s12">
+                        <label for="offerForm_money_id">认购金额</label>
+                        <input id="offerForm_money_id" type="text" class="required {decimal_19_2:true}" name="money"/>
+                    </div>
+                    <div class="col s12 custom-commit-btn">
+                        <button id="offerForm_commit_id" class="btn waves-effect waves-light col s12">提交认购</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="card z-depth-1 col s12">
+            <div class="card-content row">
+                <span class="card-title">自助申购</span>
+                <form id="applyForm" class="row main-card-content" method="post" autocomplete="off">
+                    <div class="col s12">
+                        <label for="applyForm_productCode_id">产品名称</label>
+                        <select id="applyForm_productCode_id" class="browser-default select-box required" type="text" name="productCode">
+                        </select>
+                    </div>
+                    <div class="col s12">
+                        <label for="applyForm_money_id">申购金额</label>
+                        <input id="applyForm_money_id" type="text" class="required {decimal_19_2:true}" name="money"/>
+                    </div>
+                    <div class="col s12 custom-commit-btn">
+                        <button id="applyForm_commit_id" class="btn waves-effect waves-light col s12">提交申购</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="card z-depth-1 col s12">
+            <div class="card-content row">
+                <span class="card-title">自助赎回</span>
+                <form id="atoneForm" class="row main-card-content" method="post" autocomplete="off">
+                    <div class="col s12">
+                        <label for="atoneForm_productCode_id">产品名称</label>
+                        <select id="atoneForm_productCode_id" class="browser-default select-box required" type="text" name="productCode">
+                        </select>
+                    </div>
+                    <div class="col s12">
+                        <label for="atoneForm_money_id">赎回份额</label>
+                        <input id="atoneForm_money_id" type="text" class="required {decimal_19_2:true}" name="share"/>
+                    </div>
+                    <div class="col s12 custom-commit-btn">
+                        <button id="atoneForm_commit_id" class="btn waves-effect waves-light col s12">提交赎回</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="card z-depth-1 col s12">
+            <div class="card-content row">
+                <span class="card-title">资金余额查询</span>
+                <form id="balanceForm" class="row main-card-content" method="post" autocomplete="off">
+                    <div class="col s12">
+                        <label for="balanceForm_tradeAcco_id">选择交易账号</label>
+                        <select id="balanceForm_tradeAcco_id" class="browser-default select-box" type="text" name="tradeAcco">
+                        </select>
+                    </div>
+                    <div class="col s12">
+                        <label for="moneyType_id">币种</label>
+                        <select id="moneyType_id" class="browser-default select-box required" type="text" name="moneyType">
+                            <option value="105">人民币</option>
+                            <option value="344">港币</option>
+                            <option value="840">美元</option>
+                            <option value="978">欧元</option>
+                        </select>
+                    </div>
+                    <div class="col s12">
+                        <label for="balanceForm_balance_id">总资金</label>
+                        <input id="balanceForm_balance_id" type="text" disabled="disabled" name="balance">
+                        </input>
+                    </div>
+                    <div class="col s6">
+                        <label for="balanceForm_enBalance_id">可用资金</label>
+                        <input id="balanceForm_enBalance_id" type="text" disabled="disabled" name="enBalance">
+                        </input>
+                    </div>
+                    <div class="col s6">
+                        <label for="balanceForm_imBalance_id">冻结资金</label>
+                        <input id="balanceForm_imBalance_id" type="text" disabled="disabled" name="imBalance">
+                        </input>
+                    </div>
+                    <div class="col s12 custom-commit-btn">
+                        <button id="blanceForm_commit_id" class="btn waves-effect waves-light col s12">查询</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="row main-container col s5 offset-s1">
+        <!-- 主内容 -->
+        <div class="card z-depth-1 col s12">
+            <div class="card-content">
+                <span class="card-title">客户信息</span>
+                <form id="infoForm" class="row main-card-content" method="post" autocomplete="off">
+                    <div class="col s12">
+                        <label for="infoForm_taAcco_id">选择基金账号</label>
+                        <select id="infoForm_taAcco_id" class="browser-default select-box" type="text" name="taAcco">
+                        </select>
+                    </div>
+                    <div class="col s12">
+                        <label for="infoForm_tradeAcco_id">选择交易账号</label>
+                        <select id="infoForm_tradeAcco_id" class="browser-default select-box" type="text" name="tradeAcco">
+                        </select>
+                    </div>
+                    <div class="col s6">
+                        <label for="infoForm_custNo_id">客户编号</label>
+                        <input id="infoForm_custNo_id" disabled="disabled" type="text" name="custNo">
+                        </input>
+                    </div>
+                    <div class="col s6">
+                        <label for="infoForm_custName_id">客户名称</label>
+                        <input id="infoForm_custName_id" type="text" disabled="disabled" name="custName"/>
+                    </div>
+                    <div class="col s6">
+                        <label for="infoForm_identityNo_id">证件号码</label>
+                        <input id="infoForm_identityNo_id" type="text" disabled="disabled" name="identityNo">
+                        </input>
+                    </div>
+                    <div class="col s6">
+                        <label for="infoForm_taCode_id">所在TA</label>
+                        <select id="infoForm_taCode_id" type="text" class="browser-default select-box" disabled="disabled" name="taCode">
+                        </select>
+                    </div>
+                    <div class="col s6">
+                        <label for="infoForm_mobile_id">电话号码</label>
+                        <input id="infoForm_mobile_id" type="text" disabled="disabled" name="mobile">
+                        </input>
+                    </div>
+                    <div class="col s6">
+                        <label for="infoForm_email_id">电子邮箱</label>
+                        <input id="infoForm_email_id" type="text" disabled="disabled" name="email">
+                        </input>
+                    </div>
+                    <div class="col s6">
+                        <label for="infoForm_address_id">地址</label>
+                        <input id="infoForm_address_id" type="text" disabled="disabled" name="address">
+                        </input>
+                    </div>
+                    <div class="col s6">
+                        <label for="infoForm_opendate_id">开户时间</label>
+                        <input id="infoForm_opendate_id" type="text" disabled="disabled" name="openDate">
+                        </input>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="card z-depth-1 col s12">
+            <div class="card-content row">
+                <span class="card-title">静态份额查询</span>
+                <form id="shareForm" class="row main-card-content" method="post" autocomplete="off">
+                    <div class="col s12">
+                        <label for="shareForm_productCode_id">产品名称</label>
+                        <select id="shareForm_productCode_id" class="browser-default select-box required" type="text" name="productCode">
+                        </select>
+                    </div>
+                    <div class="col s12">
+                        <label for="shareForm_share_id">总份额</label>
+                        <input id="shareForm_share_id" type="text" disabled="disabled" name="share">
+                        </input>
+                    </div>
+                    <div class="col s6">
+                        <label for="shareForm_enShare_id">可用份额</label>
+                        <input id="shareForm_enShare_id" type="text" disabled="disabled" name="enShare">
+                        </input>
+                    </div>
+                    <div class="col s6">
+                        <label for="shareForm_imShare_id">冻结份额</label>
+                        <input id="shareForm_imShare_id" type="text" disabled="disabled" name="imShare">
+                        </input>
+                    </div>
+                    <div class="col s12 custom-commit-btn">
+                        <button id="shareForm_commit_id" class="btn waves-effect waves-light col s12">查询</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="card z-depth-1 col s12">
+            <div class="card-content row">
+                <span class="card-title">基金行情查询</span>
+                <form id="stnavForm" class="row main-card-content" method="post" autocomplete="off">
+                    <div class="col s12">
+                        <label for="stnavForm_productCode_id">产品名称</label>
+                        <select id="stnavForm_productCode_id" class="browser-default select-box required" type="text" name="productCode">
+                        </select>
+                    </div>
+                    <div class="col s12">
+                        <label for="stnavForm_stnav_id">今日净值</label>
+                        <input id="stnavForm_stnav_id" type="text" disabled="disabled" name="stnav">
+                        </input>
+                    </div>
+                    <div class="col s12 custom-commit-btn">
+                        <button id="stnavForm_commit_id" class="btn waves-effect waves-light col s12">查询</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Structure -->
+<div id="suceessModal" class="modal">
+    <div class="modal-content">
+        <h4>操作成功</h4>
+    </div>
+    <div class="modal-footer">
+        <a id="yes" class=" modal-action modal-close waves-effect waves-green btn-flat">确定</a>
+    </div>
+</div>
+
+<script type="text/javascript" th:src="@{/resources/js/jquery.min.js}"></script>
+<script type="text/javascript" th:src="@{/resources/js/materialize.min.js}"></script>
+<script type="text/javascript" th:src="@{/resources/js/jquery.validate.js}"></script>
+<script type="text/javascript" th:src="@{/resources/js/jquery.metadata.js}"></script>
+<script type="text/javascript" th:src="@{/resources/js/additional-methods.js}"></script>
+<script type="text/javascript" th:src="@{/resources/js/utils.js}"></script>
+<script type="text/javascript" th:src="@{/resources/js/base_layout.js}"></script>
+
+<!-- 绑定客户编号 -->
+<script th:if="${custInfo == null}" th:inline="javascript">
+    /*<![CDATA[*/
+    $(document).ready(function(){
+
+        $("#bindForm").validate();
+
+    });
+    /*]]>*/
+</script>
+
+<script th:if="${custInfo != null}" th:inline="javascript">
+    /*<![CDATA[*/
+    $(document).ready(function(){
+        /**下拉框加载*/
+        var selectItemMap = /*[[${selectItemMap}]]*/"";
+        $("#infoForm_taCode_id").initSelect("taCodeSelect", selectItemMap);
+        $("#infoForm_tradeAcco_id").initSelect("tradeAccoSelect", selectItemMap);
+        $("#infoForm_taAcco_id").initSelect("taAccoSelect", selectItemMap);
+
+        $("#offerForm_productCode_id").initSelect("offerProductSelect", selectItemMap);
+        $("#applyForm_productCode_id").initSelect("applyProductSelect", selectItemMap);
+        $("#atoneForm_productCode_id").initSelect("productSelect", selectItemMap);
+        $("#shareForm_productCode_id").initSelect("productSelect", selectItemMap);
+        $("#stnavForm_productCode_id").initSelect("productSelect", selectItemMap);
+        $("#balanceForm_tradeAcco_id").initSelect("tradeAccoSelect", selectItemMap);
+
+
+
+        /**返填infoForm*/
+        var custInfo = /*[[${custInfo}]]*/"";
+        $("#infoForm_custNo_id").val(custInfo.custNo);
+        $("#infoForm_custName_id").val(custInfo.custName);
+        $("#infoForm_identityNo_id").val(custInfo.identityNo);
+        $("#infoForm_taCode_id").val(custInfo.taCode);
+        $("#infoForm_mobile_id").val(custInfo.mobile);
+        $("#infoForm_email_id").val(custInfo.email);
+        $("#infoForm_address_id").val(custInfo.address);
+        $("#infoForm_opendate_id").val(custInfo.openDate);
+
+        $("#offerForm").validate({
+            submitHandler: function (form) {
+                $("#offerForm_commit_id").addClass("disabled");
+                $.ajaxSetup({contentType: "application/json; charset=utf-8"});
+                var actionUrl = /*[[@{/custom/addoffertobuy.json}]]*/"";
+
+                var params = $(form).serializeJson();
+                params = $.extend(params, {taAcco: $("#infoForm_taAcco_id").val(), tradeAcco: $("#infoForm_tradeAcco_id").val()});
+                $.post(actionUrl, JSON.stringify(params), function (response) {
+                    if(response.resultCode == 1) { // 成功
+                        $("#suceessModal").find(".modal-content").append("<p>产品名称：" + response.data.productName + "</p>");
+                        $("#suceessModal").find(".modal-content").append("<p>认购金额：" + response.data.money + "</p>");
+                        $("#suceessModal").find(".modal-content").append("<p>基金账号：" + response.data.taAcco + "</p>");
+                        $("#suceessModal").find(".modal-content").append("<p>交易账号：" + response.data.tradeAcco + "</p>");
+                        $("#suceessModal").find(".modal-content").append("<p>申请编号：" + response.data.requestNo + "</p>");
+                        $('#suceessModal').modal('open');
+
+                    } else { // 失败
+                        Materialize.toast(response.errorInfo, 3000);
+                        $("#offerForm_commit_id").removeClass("disabled");
+                    }
+                });
+            }
+        });
+        $("#applyForm").validate({
+            submitHandler: function (form) {
+                $("#applyForm_commit_id").addClass("disabled");
+                $.ajaxSetup({contentType: "application/json; charset=utf-8"});
+                var actionUrl = /*[[@{/custom/addapplytobuy.json}]]*/"";
+
+                var params = $(form).serializeJson();
+                params = $.extend(params, {taAcco: $("#infoForm_taAcco_id").val(), tradeAcco: $("#infoForm_tradeAcco_id").val()});
+                $.post(actionUrl, JSON.stringify(params), function (response) {
+                    if(response.resultCode == 1) { // 成功
+                        $("#suceessModal").find(".modal-content").append("<p>产品名称：" + response.data.productName + "</p>");
+                        $("#suceessModal").find(".modal-content").append("<p>申购金额：" + response.data.money + "</p>");
+                        $("#suceessModal").find(".modal-content").append("<p>基金账号：" + response.data.taAcco + "</p>");
+                        $("#suceessModal").find(".modal-content").append("<p>交易账号：" + response.data.tradeAcco + "</p>");
+                        $("#suceessModal").find(".modal-content").append("<p>申请编号：" + response.data.requestNo + "</p>");
+                        $('#suceessModal').modal('open');
+
+                    } else { // 失败
+                        Materialize.toast(response.errorInfo, 3000);
+                        $("#applyForm_commit_id").removeClass("disabled");
+                    }
+                });
+            }
+        });
+        $("#atoneForm").validate({
+            submitHandler: function (form) {
+                $("#atoneForm_commit_id").addClass("disabled");
+                $.ajaxSetup({contentType: "application/json; charset=utf-8"});
+                var actionUrl = /*[[@{/custom/addatonefor.json}]]*/"";
+
+                var params = $(form).serializeJson();
+                params = $.extend(params, {taAcco: $("#infoForm_taAcco_id").val(), tradeAcco: $("#infoForm_tradeAcco_id").val()});
+                $.post(actionUrl, JSON.stringify(params), function (response) {
+                    if(response.resultCode == 1) { // 成功
+                        $("#suceessModal").find(".modal-content").append("<p>产品名称：" + response.data.productName + "</p>");
+                        $("#suceessModal").find(".modal-content").append("<p>赎回份额：" + response.data.share + "</p>");
+                        $("#suceessModal").find(".modal-content").append("<p>基金账号：" + response.data.taAcco + "</p>");
+                        $("#suceessModal").find(".modal-content").append("<p>交易账号：" + response.data.tradeAcco + "</p>");
+                        $("#suceessModal").find(".modal-content").append("<p>申请编号：" + response.data.requestNo + "</p>");
+                        $('#suceessModal').modal('open');
+
+                    } else { // 失败
+                        Materialize.toast(response.errorInfo, 3000);
+                        $("#atoneForm_commit_id").removeClass("disabled");
+                    }
+                });
+            }
+        });
+
+        $("#shareForm").validate({
+            submitHandler: function (form) {
+                $("#shareForm_commit_id").addClass("disabled");
+                $.ajaxSetup({contentType: "application/json; charset=utf-8"});
+                var actionUrl = /*[[@{/custom/searchshare.json}]]*/"";
+
+                var params = $(form).serializeJson();
+                params = $.extend(params, {taAcco: $("#infoForm_taAcco_id").val()});
+                $.post(actionUrl, JSON.stringify(params), function (response) {
+                    if(response.resultCode == 1) { // 成功
+                        $("#shareForm_share_id").val(response.staticShare.share);
+                        $("#shareForm_enShare_id").val(response.staticShare.enShare);
+                        $("#shareForm_imShare_id").val(response.staticShare.imShare);
+                    } else { // 失败
+                        Materialize.toast(response.errorInfo, 3000);
+                    }
+                    $("#shareForm_commit_id").removeClass("disabled");
+                });
+            }
+        });
+
+        $("#stnavForm").validate({
+            submitHandler: function (form) {
+                $("#stnavForm_commit_id").addClass("disabled");
+                $.ajaxSetup({contentType: "application/json; charset=utf-8"});
+                var actionUrl = /*[[@{/custom/searchstnav.json}]]*/"";
+
+                var params = $(form).serializeJson();
+                params = $.extend(params, {taAcco: $("#stnavForm_taAcco_id").val()});
+                $.post(actionUrl, JSON.stringify(params), function (response) {
+                    if(response.resultCode == 1) { // 成功
+                        $("#stnavForm_stnav_id").val(response.dynamicProductInfo.stnav);
+                    } else { // 失败
+                        Materialize.toast(response.errorInfo, 3000);
+                    }
+                    $("#stnavForm_commit_id").removeClass("disabled");
+                });
+            }
+        });
+
+        $("#balanceForm").validate({
+            submitHandler: function (form) {
+                $("#balanceForm_commit_id").addClass("disabled");
+                $.ajaxSetup({contentType: "application/json; charset=utf-8"});
+                var actionUrl = /*[[@{/custom/searchbalance.json}]]*/"";
+
+                var params = $(form).serializeJson();
+                params = $.extend(params, {tradeAcco: $("#balanceForm_tradeAcco_id").val()});
+                $.post(actionUrl, JSON.stringify(params), function (response) {
+                    if(response.resultCode == 1) { // 成功
+                        $("#balanceForm_balance_id").val(response.staticTradeBalance.balance);
+                        $("#balanceForm_enBalance_id").val(response.staticTradeBalance.enBalance);
+                        $("#balanceForm_imBalance_id").val(response.staticTradeBalance.imBalance);
+                    } else { // 失败
+                        Materialize.toast(response.errorInfo, 3000);
+                    }
+                    $("#balanceForm_commit_id").removeClass("disabled");
+                });
+            }
+        });
+
+        $("#yes").click(function(){
+            $("#commit_id").removeClass("disabled");
+            $('#suceessModal').modal('close');
+            window.location.reload(); //成功后刷新界面
+        });
+
+
+    });
+    /*]]>*/
+</script>
+</body>
+</html>
