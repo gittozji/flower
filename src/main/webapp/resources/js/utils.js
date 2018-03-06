@@ -45,3 +45,19 @@
         this.append(selectOptions);
     }
 })(jQuery);
+
+function upload(file) {
+    var fd = new FormData();
+    fd.append("upload", 1);
+    fd.append("upfile", file);
+    $.ajax({
+        url: "www.baidu.com",
+        type: "POST",
+        processData: false,
+        contentType: false,
+        data: fd,
+        success: function(response) {
+            alert(response);
+        }
+    });
+}

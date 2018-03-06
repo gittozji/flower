@@ -18,7 +18,7 @@
             <ul class="right">
                 <li><a th:href="@{/admin/index.html}"><i class="material-icons left">account_balance</i>当前状态</a></li>
                 <li shiro:hasRole="admin_trade"><a th:href="@{/admin/trade/index.html}"><i class="material-icons left">gavel</i>业务交易</a></li>
-                <li class="active" shiro:hasRole="admin_maintain"><a th:href="@{/admin/maintain/index.html}"><i class="material-icons left">view_quilt</i>业务维护</a></li>
+                <li class="active" shiro:hasRole="admin_maintain"><a th:href="@{/admin/maintain/index.html}"><i class="material-icons left">view_quilt</i>鲜花管理</a></li>
                 <li shiro:hasRole="admin_process"><a th:href="@{/admin/process/index.html}"><i class="material-icons left">call_merge</i>流程控制</a></li>
                 <li shiro:hasRole="admin_user"><a th:href="@{/admin/user/index.html}"><i class="material-icons left">vpn_key</i>系统管理</a></li>
                 <li th:if="${session.user != null}">
@@ -42,30 +42,38 @@
         <a th:href="@{/admin/maintain/productinfo.html}"><div class="main-container-nav-item">产品信息设置</div></a>
         <a th:href="@{/admin/maintain/netstation.html}"><div class="main-container-nav-item">网点设置</div></a>
         <a th:href="@{/admin/maintain/ta.html}"><div class="main-container-nav-item">TA信息设置</div></a>
-        <a th:href="@{/admin/maintain/bankaccoinfo.html}"><div class="main-container-nav-item main-container-nav-item-active">系统银行账户设置</div></a>
+        <a th:href="@{/admin/maintain/bankaccoinfo.html}"><div class="main-container-nav-item main-container-nav-item-active">鲜花新增</div></a>
     </div>
     <!-- 主内容 -->
     <div class="col s10 offset-s2">
         <div class="container">
             <div class="card z-depth-4 main-card">
                 <div class="card-content">
-                    <span class="card-title">系统银行账户设置</span>
+                    <span class="card-title">鲜花新增</span>
+                    <form>
+
+                    </form>
                     <form id="addForm" class="row main-card-content" method="post" autocomplete="off">
                         <div class="col s4">
-                            <label for="name_id">类型名称</label>
+                            <label for="name_id">名称</label>
                             <input id="name_id" type="text" class="required" name="name"/>
                         </div>
                         <div class="col s4">
-                            <label for="personName_id">开户人名称</label>
-                            <input id="personName_id" type="text" class="required" name="personName"/>
+                            <label for="personName_id">价格</label>
+                            <input id="personName_id" type="text" class="required {decimal_19_2:true}" name="price"/>
                         </div>
                         <div class="col s4">
-                            <label for="bankName_id">银行名称</label>
-                            <input id="bankName_id" type="text" class="required" name="bankName"/>
+                            <label for="bankName_id">数量</label>
+                            <input id="bankName_id" type="text" class="required {number:true}" maxlength="7" name="number"/>
                         </div>
-                        <div class="col s4">
-                            <label for="bankAcco_id">银行账号</label>
-                            <input id="bankAcco_id" type="text" class="required {number:true}" maxlength="28" name="bankAcco"/>
+                        <div class="col s12 file-field input-field">
+                            <div class="btn">
+                                <span>图片</span>
+                                <input id="file_id" type="file"/>
+                            </div>
+                            <div class="file-path-wrapper">
+                                <input class="file-path validate" type="text"/>
+                            </div>
                         </div>
                         <div class="row">
                             <button id="commit_id" class="btn waves-effect waves-light col s4 offset-s4">添加</button>
@@ -95,6 +103,9 @@
         /** 表单提交 */
         $("#addForm").validate({
             submitHandler: function (form) {
+                upload($("#file_id").get(0).files[0]);
+
+
                 $("#commit_id").addClass("disabled");
                 $.ajaxSetup({contentType: "application/json; charset=utf-8"});
                 var actionUrl = /*[[@{/admin/maintain/addbankaccoinfo.json}]]*/"";
