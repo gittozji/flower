@@ -49,14 +49,7 @@ public class ShiroConfig {
         shiroFilterFactoryBean.setSecurityManager(securityManager);
         shiroFilterFactoryBean.setLoginUrl("/login.html");
         Map<String, String> filterMap = new HashMap<String, String>();
-        filterMap.put("/", "anon");
-        filterMap.put("/custom/**", "roles[custom]");
-        filterMap.put("/admin/*", "roles[admin]");
-        filterMap.put("/admin/process/**", "roles[admin_process]");
-        filterMap.put("/admin/maintain/**", "roles[admin_maintain]");
-        filterMap.put("/admin/trade/**", "roles[admin_trade]");
-        filterMap.put("/admin/user/**", "roles[admin_user]");
-//        filterMap.put("/**","authc"); //所有的请求(除去配置的静态资源请求或请求地址为anon的请求)都要通过登录验证,如果未登录则跳到/login
+        filterMap.put("/**", "anon");
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterMap); //路径权限控制
         return shiroFilterFactoryBean;
     }
