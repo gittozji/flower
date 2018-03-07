@@ -46,18 +46,23 @@
     }
 })(jQuery);
 
-function upload(file) {
+function upload(file, url) {
     var fd = new FormData();
     fd.append("upload", 1);
     fd.append("upfile", file);
+    var data = null;
     $.ajax({
-        url: "www.baidu.com",
+        url: url,
         type: "POST",
+        async:false,
         processData: false,
         contentType: false,
         data: fd,
         success: function(response) {
-            alert(response);
+            if (response.resultCode == 1) {
+                data = response.data;
+            }
         }
     });
+    return data;
 }

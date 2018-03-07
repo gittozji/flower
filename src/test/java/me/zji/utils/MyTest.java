@@ -84,4 +84,10 @@ public class MyTest {
         System.out.println(buyMap.get("balance"));
         System.out.println(Double.valueOf(""));
     }
+
+    @Test
+    public void f0() {
+        String src = "xxx.png";
+        System.out.println(src.substring(src.lastIndexOf("."), src.length()));
+    }
 }

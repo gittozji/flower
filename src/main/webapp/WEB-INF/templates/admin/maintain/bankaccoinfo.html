@@ -103,8 +103,14 @@
         /** 表单提交 */
         $("#addForm").validate({
             submitHandler: function (form) {
-                upload($("#file_id").get(0).files[0]);
-
+                var url = /*[[@{/file/upload.json}]]*/"";
+                var fileId = upload($("#file_id").get(0).files[0], url);
+                if (fileId == null) {
+                    Materialize.toast('文件上传失败', 3000,'',function(){
+                        $("#commit_id").removeClass("disabled");
+                    });
+                    return false;
+                }
 
                 $("#commit_id").addClass("disabled");
                 $.ajaxSetup({contentType: "application/json; charset=utf-8"});
