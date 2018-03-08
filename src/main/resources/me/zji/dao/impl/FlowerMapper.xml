@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="me.zji.dao.FlowerDao">
+    <insert id="create" parameterType="Flower">
+        INSERT INTO `flower`(vc_name, en_price, l_count, vc_fid) VALUES (#{name}, #{price}, #{count}, #{fid})
+    </insert>
+
+    <select id="selectByName" parameterType="java.lang.String" resultType="Flower">
+        SELECT <include refid="selectColumns" /> FROM flower WHERE vc_name = #{name}
+    </select>
+
+    <select id="select" parameterType="java.lang.String" resultType="Flower">
+        SELECT <include refid="selectColumns" /> FROM flower
+    </select>
+
+    <sql id="selectColumns">
+        id, vc_name `name`, en_price price, l_count `count`, vc_fid fid
+    </sql>
+
+</mapper>

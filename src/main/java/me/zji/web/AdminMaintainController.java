@@ -1,7 +1,6 @@
 package me.zji.web;
 
 import me.zji.constants.CommonConstants;
-import me.zji.dto.SelectItem;
 import me.zji.entity.*;
 import me.zji.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,15 +8,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
- * 业务维护控制器
+ * 产品维护控制器
  * Created by imyu on 2017/3/1.
  */
 @Controller
@@ -34,8 +32,13 @@ public class AdminMaintainController {
     DynamicSelectService dynamicSelectService;
     @Autowired
     BankInfoService bankInfoService;
+
+    @Autowired
+    FlowerService flowerService;
+
     /**
      * View 流程控制管理首页
+     *
      * @return
      */
     @RequestMapping(value = "/admin/maintain/index.html")
@@ -45,15 +48,17 @@ public class AdminMaintainController {
 
     /**
      * View 工作日设置
+     *
      * @return
      */
     @RequestMapping(value = "/admin/maintain/day.html")
     public String day() {
-        return "/admin/maintain/day";
+        return "admin/maintain/showpage";
     }
 
     /**
      * Action 添加工作日
+     *
      * @return
      */
     @RequestMapping(value = "/admin/maintain/addday")
@@ -65,7 +70,7 @@ public class AdminMaintainController {
         Day day = new Day();
         day.setDay((String) param.get("day"));
         String workFlag = param.get("workFlag").toString();
-        if("true".equals(workFlag)) {
+        if ("true".equals(workFlag)) {
             day.setWorkFlag(0);
         } else {
             day.setWorkFlag(1);
@@ -79,6 +84,7 @@ public class AdminMaintainController {
 
     /**
      * View 产品信息设置
+     *
      * @return
      */
     @RequestMapping(value = "/admin/maintain/productinfo.html")
@@ -93,6 +99,7 @@ public class AdminMaintainController {
 
     /**
      * Action 添加产品信息
+     *
      * @return
      */
     @RequestMapping(value = "/admin/maintain/addproductinfo")
@@ -119,7 +126,7 @@ public class AdminMaintainController {
         productInfo.setProductName((String) param.get("productName"));
 
 
-        if(productInfoService.queryByProductCode(productInfo.getProductCode()) != null) {
+        if (productInfoService.queryByProductCode(productInfo.getProductCode()) != null) {
             resultCode = CommonConstants.RESULT_FAILURE;
             errorInfo = "已经存在该产品代码";
         } else {
@@ -134,6 +141,7 @@ public class AdminMaintainController {
 
     /**
      * View TA信息
+     *
      * @return
      */
     @RequestMapping(value = "/admin/maintain/ta.html")
@@ -143,6 +151,7 @@ public class AdminMaintainController {
 
     /**
      * Action 添加TA信息
+     *
      * @return
      */
     @RequestMapping(value = "/admin/maintain/addta")
@@ -154,7 +163,7 @@ public class AdminMaintainController {
         Ta ta = new Ta();
         ta.setTaCode((String) param.get("code"));
         ta.setTaName((String) param.get("name"));
-        if(taService.queryByCode(ta.getTaCode()) != null) {
+        if (taService.queryByCode(ta.getTaCode()) != null) {
             resultCode = CommonConstants.RESULT_FAILURE;
             errorInfo = "已经存在该TA代码";
         } else {
@@ -168,6 +177,7 @@ public class AdminMaintainController {
 
     /**
      * View 网点设置
+     *
      * @return
      */
     @RequestMapping(value = "/admin/maintain/netstation.html")
@@ -177,6 +187,7 @@ public class AdminMaintainController {
 
     /**
      * Action 添加网点信息
+     *
      * @return
      */
     @RequestMapping(value = "/admin/maintain/addnetstation")
@@ -189,7 +200,7 @@ public class AdminMaintainController {
         netStation.setNetNo((String) param.get("netNo"));
         netStation.setNetName((String) param.get("netName"));
         netStation.setAddress((String) param.get("address"));
-        if(netStationService.queryByNetNo(netStation.getNetNo()) != null) {
+        if (netStationService.queryByNetNo(netStation.getNetNo()) != null) {
             resultCode = CommonConstants.RESULT_FAILURE;
             errorInfo = "已经存在该网点编号";
         } else {
@@ -200,45 +211,55 @@ public class AdminMaintainController {
         model.put("errorInfo", errorInfo);
         return model;
     }
-
-
     /**
-     * View 系统银行账户设置
+     * View 查看产品页面
+     *
      * @return
      */
-    @RequestMapping(value = "/admin/maintain/bankaccoinfo.html")
-    public String bankAccoInfo() {
-        return "/admin/maintain/bankaccoinfo";
+    @RequestMapping(value = "/admin/maintain/showpage.html")
+    public ModelAndView showpage(ModelAndView modelAndView) {
+        modelAndView.setViewName("/admin/maintain/showpage");
+        modelAndView.addObject("data", flowerService.query());
+        return modelAndView;
     }
 
     /**
-     * Action 添加银行账户信息
+     * View 新增产品页面
+     *
      * @return
      */
-    @RequestMapping(value = "/admin/maintain/addbankaccoinfo")
+    @RequestMapping(value = "/admin/maintain/addpage.html")
+    public String addpage() {
+        return "/admin/maintain/addpage";
+    }
+
+    /**
+     * Action 新增产品请求
+     *
+     * @return
+     */
+    @RequestMapping(value = "/admin/maintain/add")
     @ResponseBody
-    public Object addBankAccoInfo(@RequestBody Map param) {
+    public Object add(@RequestBody Map param) {
         int resultCode = CommonConstants.RESULT_SUCEESS;
         String errorInfo = null;
+        Flower flower = new Flower();
+        flower.setName((String) param.get("name"));
+        flower.setPrice(Float.parseFloat(param.get("price").toString()));
+        flower.setCount(Integer.parseInt(param.get("count").toString()));
+        flower.setFid((String) param.get("fid"));
 
-        BankAccoInfo bankAccoInfo = new BankAccoInfo();
-        bankAccoInfo.setName((String) param.get("name"));
-        bankAccoInfo.setBankAcco((String) param.get("bankAcco"));
-        bankAccoInfo.setBankName((String) param.get("bankName"));
-        bankAccoInfo.setPersonName((String) param.get("personName"));
-        if(bankInfoService.queryByBankAcco(bankAccoInfo.getBankAcco()) != null) {
+        if (flowerService.queryByName(flower.getName()) != null) {
             resultCode = CommonConstants.RESULT_FAILURE;
-            errorInfo = "已经存在该银行账户";
+            errorInfo = "已经存在该产品";
         } else {
-            bankInfoService.create(bankAccoInfo);
+            flowerService.create(flower);
         }
         Map model = new HashMap();
         model.put("resultCode", resultCode);
         model.put("errorInfo", errorInfo);
         return model;
     }
-
-
 
 
 }

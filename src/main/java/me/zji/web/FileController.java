@@ -16,6 +16,7 @@ import java.io.*;
 import java.util.*;
 
 /**
+ * 文件上传
  * Created by imyu on 2018-03-07.
  */
 @Controller
@@ -65,7 +66,7 @@ public class FileController {
         }
         Map map = new HashMap();
         map.put("resultCode", CommonConstants.RESULT_SUCEESS);
-        map.put("data", uuid);
+        map.put("data", fileId);
         return map;
     }
 

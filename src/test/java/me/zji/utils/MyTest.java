@@ -5,6 +5,7 @@ import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -89,5 +90,10 @@ public class MyTest {
     public void f0() {
         String src = "xxx.png";
         System.out.println(src.substring(src.lastIndexOf("."), src.length()));
+    }
+
+    @Test
+    public void f1() {
+        System.out.println(UUID.randomUUID().toString().length());
     }
 }

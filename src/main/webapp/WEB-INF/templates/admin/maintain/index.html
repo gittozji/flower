@@ -14,7 +14,7 @@
 <div class="navbar-fixed">
     <nav>
         <div class="nav-wrapper">
-            <a href="#!" class="brand-logo"><i class="material-icons">cloud_queue</i>基金交易系统</a>
+            <a href="#!" class="brand-logo"><i class="material-icons">cloud_queue</i>鲜花在线订购</a>
             <ul class="right">
                 <li><a th:href="@{/admin/index.html}"><i class="material-icons left">account_balance</i>当前状态</a></li>
                 <li><a th:href="@{/admin/trade/index.html}"><i class="material-icons left">gavel</i>业务交易</a></li>
@@ -38,11 +38,8 @@
 <div class="row main-container">
     <!-- 次级导航栏 -->
     <div class="col s2 main-container-nav">
-        <a th:href="@{/admin/maintain/day.html}"><div class="main-container-nav-item">工作日设置</div></a>
-        <a th:href="@{/admin/maintain/productinfo.html}"><div class="main-container-nav-item">产品信息设置</div></a>
-        <a th:href="@{/admin/maintain/netstation.html}"><div class="main-container-nav-item">网点设置</div></a>
-        <a th:href="@{/admin/maintain/ta.html}"><div class="main-container-nav-item">TA信息设置</div></a>
-        <a th:href="@{/admin/maintain/bankaccoinfo.html}"><div class="main-container-nav-item">系统银行账户设置</div></a>
+        <a th:href="@{/admin/maintain/addpage.html}"><div class="main-container-nav-item">新增</div></a>
+        <a th:href="@{/admin/maintain/showpage.html}"><div class="main-container-nav-item">查看</div></a>
     </div>
     <!-- 主内容 -->
     <div class="col s10 offset-s2">

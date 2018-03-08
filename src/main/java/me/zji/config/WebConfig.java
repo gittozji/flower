@@ -5,10 +5,7 @@ import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.DependsOn;
+import org.springframework.context.annotation.*;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
@@ -34,6 +31,7 @@ import java.util.Set;
 @Configuration
 @EnableWebMvc
 @ComponentScan("me.zji.web")
+@ImportResource("classpath:me/zji/config/servletContext.xml")
 public class WebConfig extends WebMvcConfigurerAdapter {
     /******************Thymeleaf部分配置*******************/
     // Thymeleaf视图解析器
