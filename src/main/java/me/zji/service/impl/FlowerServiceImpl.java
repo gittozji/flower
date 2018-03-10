@@ -16,6 +16,11 @@ import java.util.List;
 public class FlowerServiceImpl implements FlowerService {
     @Autowired
     FlowerDao flowerDao;
+
+    public Flower getFlower(Long id) {
+        return flowerDao.selectById(id);
+    }
+
     public void create(Flower flower) {
         flowerDao.create(flower);
     }
@@ -28,4 +33,14 @@ public class FlowerServiceImpl implements FlowerService {
         List<Flower> list = flowerDao.select();
         return list == null ? Collections.EMPTY_LIST : list;
     }
+
+    public void deleteByName(String name) {
+        flowerDao.deleteByName(name);
+    }
+
+    public void updateCount(Flower flower) {
+        flowerDao.updateCount(flower);
+    }
+
+
 }

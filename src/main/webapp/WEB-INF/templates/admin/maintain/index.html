@@ -3,7 +3,7 @@
       xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
 <head>
     <meta charset="UTF-8"/>
-    <title>管理员首页</title>
+    <title>鲜花在线订购</title>
     <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
     <link type="text/css" rel="stylesheet" th:href="@{/resources/css/materialize.min.css}"  media="screen,projection"/>
     <link type="text/css" rel="stylesheet" th:href="@{/resources/css/base_layout.css}"  media="screen,projection"/>
@@ -17,10 +17,8 @@
             <a href="#!" class="brand-logo"><i class="material-icons">cloud_queue</i>鲜花在线订购</a>
             <ul class="right">
                 <li><a th:href="@{/admin/index.html}"><i class="material-icons left">account_balance</i>当前状态</a></li>
-                <li><a th:href="@{/admin/trade/index.html}"><i class="material-icons left">gavel</i>业务交易</a></li>
                 <li class="active"><a th:href="@{/admin/maintain/index.html}"><i class="material-icons left">view_quilt</i>鲜花管理</a></li>
-                <li><a th:href="@{/admin/process/index.html}"><i class="material-icons left">call_merge</i>流程控制</a></li>
-                <li ><a th:href="@{/admin/user/index.html}"><i class="material-icons left">vpn_key</i>系统管理</a></li>
+                <li><a th:href="@{/admin/process/index.html}"><i class="material-icons left">call_merge</i>派送管理</a></li>
                 <li th:if="${session.user != null}">
                     <a class="dropdown-button nav-user" href="#!" data-activates="dropdown_id"><i class="material-icons left">person</i><span th:text="${session.user.nikename}"></span><i class="material-icons right">arrow_drop_down</i></a>
                     <ul id="dropdown_id" class="dropdown-content">

@@ -16,9 +16,8 @@
         <div class="nav-wrapper">
             <a href="#!" class="brand-logo"><i class="material-icons">cloud_queue</i>鲜花在线订购</a>
             <ul class="right">
-                <li><a th:href="@{/admin/index.html}"><i class="material-icons left">account_balance</i>当前状态</a></li>
-                <li><a th:href="@{/admin/maintain/index.html}"><i class="material-icons left">view_quilt</i>鲜花管理</a></li>
-                <li class="active"><a th:href="@{/admin/process/index.html}"><i class="material-icons left">call_merge</i>派送管理</a></li>
+                <li><a th:href="@{/custom/my.html}"><i class="material-icons left">vpn_key</i>个人资料</a></li>
+                <li class="active"><a th:href="@{/custom/index.html}"><i class="material-icons left">view_quilt</i>鲜花下单</a></li>
                 <li th:if="${session.user != null}">
                     <a class="dropdown-button nav-user" href="#!" data-activates="dropdown_id"><i class="material-icons left">person</i><span th:text="${session.user.nikename}"></span><i class="material-icons right">arrow_drop_down</i></a>
                     <ul id="dropdown_id" class="dropdown-content">
@@ -34,24 +33,30 @@
 </div>
 
 <div class="row main-container">
+    <!-- 次级导航栏 -->
+    <div class="col s2 main-container-nav">
+        <a th:href="@{/custom/index.html}"><div class="main-container-nav-item">订购</div></a>
+        <a th:href="@{/custom/showpage.html}"><div class="main-container-nav-item  main-container-nav-item-active">查看订单</div></a>
+    </div>
     <!-- 主内容 -->
-    <div class="col s12">
+    <div class="col s11 offset-s1">
         <div class="container row">
-            <div th:each="orderForm : ${data}" class="col s4">
-                <div class="card blue-grey darken-1">
-                    <div class="card-content white-text">
-                        <span class="card-title" th:text="${'产品：' + orderForm.flower.getName()}"></span>
-                        <p th:text="${'用户：' + orderForm.getUser().getNikename()}"></p>
-                        <p th:text="${'手机：' + orderForm.getUser().getUserDetail().getTel()}"></p>
-                        <p th:text="${'地址：' + orderForm.getUser().getUserDetail().getAddress()}"></p>
-                        <p th:text="${'数量：' + orderForm.getCount()}"></p>
-                        <p th:text="${'状态：' + map.get(orderForm.getState())}"></p>
+            <div th:each="orderForm : ${data}" class="col s6">
+                <div class="card">
+                    <div class="card-image">
+                        <img th:src="@{'/file/' + ${orderForm.getFlower().getFid()}}"/>
+                        <span class="card-title" th:text="${orderForm.getFlower().getName()}">Card Title</span>
+                    </div>
+                    <div class="card-content">
+                        <p th:text="${'购买数量：' + orderForm.getCount()}"></p>
+                        <p th:text="${'订单状态：' + map.get(orderForm.getState())}"></p>
                         <p th:text="${'下单时间：' + orderForm.getDate()}"></p>
                     </div>
                     <div class="card-action">
-                        <input class="order-form-id" type="hidden" th:value="${orderForm.getId()}"/>
-                        <a href="javascript:void(0);" onclick="dispatch(this);">置派送</a>
-                        <a href="javascript:void(0);" onclick="finish(this);">置完成</a>
+                        <input type="hidden" class="order-form-id" th:value="${orderForm.getId()}"/>
+                        <a href="javascript:void(0);" onclick="pay(this);">付款</a>
+                        <a href="javascript:void(0);" onclick="refund(this);">退款</a>
+                        <a href="javascript:void(0);" onclick="cancel(this);">取消</a>
                         <a href="javascript:void(0);" onclick="del(this);">删除</a>
                     </div>
                 </div>
@@ -73,31 +78,22 @@
     /*-------------------------------------------
      |                页 面 渲 染               |
      ============================================*/
-
-    function dispatch(t) {
-        var id = $(t).parents(".card").find(".order-form-id").val();
-        $.ajaxSetup({contentType: "application/json; charset=utf-8"});
-        var actionUrl = /*[[@{/admin/process/dispatch.json}]]*/"";
-        var params = {id: id};
-        $.post(actionUrl, JSON.stringify(params), function (response) {
-            if(response.resultCode == 1) { // 成功
-                Materialize.toast('设置成功', 2000,'',function() {
-                    window.location.reload(); //成功后刷新界面
-                });
-            } else { // 失败
-                Materialize.toast(response.errorInfo, 3000,'');
-            }
-        });
+    function pay(t) {
+        Materialize.toast("待开发...", 3000,'');
     }
 
-    function finish(t) {
+    function refund(t) {
+        Materialize.toast("待开发...", 3000,'');
+    }
+
+    function cancel(t) {
         var id = $(t).parents(".card").find(".order-form-id").val();
         $.ajaxSetup({contentType: "application/json; charset=utf-8"});
-        var actionUrl = /*[[@{/admin/process/finish.json}]]*/"";
+        var actionUrl = /*[[@{/custom/cancel.json}]]*/"";
         var params = {id: id};
         $.post(actionUrl, JSON.stringify(params), function (response) {
             if(response.resultCode == 1) { // 成功
-                Materialize.toast('设置成功', 2000,'',function() {
+                Materialize.toast('取消成功', 2000,'',function() {
                     window.location.reload(); //成功后刷新界面
                 });
             } else { // 失败
@@ -107,7 +103,7 @@
     }
 
     function del(t) {
-        Materialize.toast("为了保留数据，订单不允许删除，可以设置其状态", 3000,'');
+        Materialize.toast("本系统不支持删除订单", 3000,'');
     }
     /*]]>*/
 </script>

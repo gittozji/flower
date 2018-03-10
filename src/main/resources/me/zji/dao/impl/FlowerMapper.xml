@@ -8,10 +8,21 @@
     <select id="selectByName" parameterType="java.lang.String" resultType="Flower">
         SELECT <include refid="selectColumns" /> FROM flower WHERE vc_name = #{name}
     </select>
+    <select id="selectById" parameterType="java.lang.Long" resultType="Flower">
+        SELECT <include refid="selectColumns" /> FROM flower WHERE id = #{id}
+    </select>
 
     <select id="select" parameterType="java.lang.String" resultType="Flower">
         SELECT <include refid="selectColumns" /> FROM flower
     </select>
+
+    <delete id="deleteByName" parameterType="java.lang.String">
+        DELETE FROM `flower` WHERE `vc_name` = #{name}
+    </delete>
+
+    <update id="updateCount" parameterType="Flower">
+        UPDATE `flower` SET l_count = #{count} WHERE id = #{id}
+    </update>
 
     <sql id="selectColumns">
         id, vc_name `name`, en_price price, l_count `count`, vc_fid fid

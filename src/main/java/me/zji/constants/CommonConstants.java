@@ -7,4 +7,6 @@ package me.zji.constants;
 public class CommonConstants {
     public static final int RESULT_SUCEESS = 1;
     public static final int RESULT_FAILURE = 0;
+
+
 }

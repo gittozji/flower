@@ -1,13 +1,14 @@
 package me.zji.service;
 
 import me.zji.entity.User;
+import me.zji.entity.UserDetail;
 
 /**
  * 用户服务
  * Created by imyu on 2017/2/11.
  */
 public interface UserService {
-    User getUser(int id);
+    User getUser(Long id);
 
     /**
      * 通过用户名查找用户
@@ -21,4 +22,8 @@ public interface UserService {
      * @param user
      */
     void create(User user);
+
+    UserDetail queryByUserId(Long id);
+
+    void update(User user, UserDetail detail);
 }

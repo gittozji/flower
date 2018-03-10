@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="me.zji.dao.UserDetailDao">
+    <select id="selectByUserId" parameterType="java.lang.Long" resultType="UserDetail">
+        select <include refid="selectColumns"/> from user_detail where user_id = #{id}
+    </select>
+    <insert id="create" parameterType="UserDetail">
+        INSERT INTO `user_detail`(user_id, vc_address, vc_tel) VALUES (#{userId}, #{address}, #{tel})
+    </insert>
+    <update id="update" parameterType="UserDetail">
+        UPDATE `user_detail` SET vc_address = #{address}, vc_tel = #{tel}
+    </update>
+
+    <sql id="selectColumns">
+        id, user_id userId, vc_address address, vc_tel tel
+    </sql>
+</mapper>

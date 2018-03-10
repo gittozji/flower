@@ -11,6 +11,8 @@ public class User extends Id {
     private Integer type;
     private Integer status;
 
+    UserDetail userDetail;
+
     public String getUsername() {
         return username;
     }
@@ -49,6 +51,14 @@ public class User extends Id {
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public UserDetail getUserDetail() {
+        return userDetail;
+    }
+
+    public void setUserDetail(UserDetail userDetail) {
+        this.userDetail = userDetail;
     }
 
     @Override

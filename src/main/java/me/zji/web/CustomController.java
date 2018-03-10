@@ -1,31 +1,20 @@
 package me.zji.web;
 
 import me.zji.constants.CommonConstants;
-import me.zji.dao.StaticTradeBalanceDao;
-import me.zji.dao.TradeAccoDao;
-import me.zji.dto.AdminUser;
+import me.zji.constants.OrderFormState;
+import me.zji.constants.OrderFormStateMap;
 import me.zji.dto.CustUser;
 import me.zji.entity.*;
-import me.zji.security.UsernamePasswordUsertypeToken;
 import me.zji.service.*;
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.IncorrectCredentialsException;
-import org.apache.shiro.authc.LockedAccountException;
-import org.apache.shiro.authc.UnknownAccountException;
-import org.apache.shiro.session.Session;
-import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
-import java.io.UnsupportedEncodingException;
-import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,228 +25,153 @@ import java.util.Map;
 @Controller
 public class CustomController {
     @Autowired
-    CustInfoService custInfoService;
+    FlowerService flowerService;
     @Autowired
-    DynamicSelectService dynamicSelectService;
+    OrderFormService orderFormService;
     @Autowired
-    PasswordService passwordService;
-    @Autowired
-    TradeAccoDao tradeAccoDao;
-    @Autowired
-    BuyService buyService;
-    @Autowired
-    StaticShareService staticShareService;
-    @Autowired
-    DynamicProductInfoService dynamicProductInfoService;
-    @Autowired
-    StaticTradeBalanceDao staticTradeBalanceDao;
+    UserService userService;
 
     /**
-     * View 管理员系统管理页面
+     * View 个人资料页面
+     * @return
+     */
+    @RequestMapping(value = "/custom/my.html")
+    public ModelAndView my(ModelAndView modelAndView) {
+        modelAndView.setViewName("/custom/my");
+        CustUser user = (CustUser) SecurityUtils.getSubject().getSession().getAttribute("user");
+        modelAndView.addObject("user", userService.getUser(user.getId()));
+        return modelAndView;
+    }
+
+    /**
+     * Action 个人资料修改请求
+     *
+     * @return
+     */
+    @RequestMapping(value = "/custom/modify")
+    @ResponseBody
+    public Object modify(@RequestBody Map param) {
+        int resultCode = CommonConstants.RESULT_SUCEESS;
+        String errorInfo = null;
+        User user = userService.getUser(Long.parseLong(param.get("id").toString()));
+        user.setNikename((String) param.get("nike"));
+
+        UserDetail detail = new UserDetail();
+        detail.setUserId(user.getId());
+        detail.setAddress((String) param.get("address"));
+        detail.setTel((String) param.get("tel"));
+
+        userService.update(user, detail);
+
+        Map model = new HashMap();
+        model.put("resultCode", resultCode);
+        model.put("errorInfo", errorInfo);
+        return model;
+    }
+
+    /**
+     * View 鲜花下单页面
      * @return
      */
     @RequestMapping(value = "/custom/index.html")
-    public String user(@ModelAttribute("errorInfo") String errorInfo, Model model) {
-        model.addAttribute("errorInfo", errorInfo);
-        Subject subject = SecurityUtils.getSubject();
-        Session session = subject.getSession();
-        CustUser custUser = (CustUser) session.getAttribute("user");
-
-        CustInfo custInfo = custInfoService.queryByUsername(custUser.getUsername());
-        model.addAttribute("custInfo", custInfo);
-        if (custInfo == null) {
-            return "/custom/index";
-        }
-
-        /**下拉框*/
-        Map<String, Object> selectItemMap = new HashMap<String, Object>();
-        selectItemMap.put("taCodeSelect", dynamicSelectService.selectTaCode());
-        selectItemMap.put("taAccoSelect", dynamicSelectService.selectTaAccoByCustNo(custInfo.getCustNo()));
-        selectItemMap.put("tradeAccoSelect", dynamicSelectService.selectTradeAccoByCustNo(custInfo.getCustNo()));
-        selectItemMap.put("offerProductSelect", dynamicSelectService.selectProductByStatus("0"));
-        selectItemMap.put("applyProductSelect", dynamicSelectService.selectProductByStatus("1"));
-        selectItemMap.put("productSelect", dynamicSelectService.selectProductByStatus("-1"));
-        model.addAttribute("selectItemMap", selectItemMap);
-
-        return "/custom/index";
+    public ModelAndView index(ModelAndView modelAndView) {
+        modelAndView.setViewName("/custom/index");
+        modelAndView.addObject("data", flowerService.query());
+        return modelAndView;
     }
 
     /**
-     * Action 绑定客户编号
+     * Action 下单请求
+     *
      * @return
      */
-    @RequestMapping(value = "/custom/dobind")
-    public String doLogin(HttpServletRequest httpServletRequest, RedirectAttributes redirectAttributes) {
-        String viewName = "redirect:/custom/index.html";
+    @RequestMapping(value = "/custom/buy")
+    @ResponseBody
+    public Object buy(@RequestBody Map param) {
+        if (StringUtils.isEmpty(param.get("count"))) {
+            Map model = new HashMap();
+            model.put("resultCode", CommonConstants.RESULT_FAILURE);
+            model.put("errorInfo", "请输入订购数量");
+            return model;
+        }
+
+        int resultCode = CommonConstants.RESULT_SUCEESS;
         String errorInfo = null;
-
-        String custNo = httpServletRequest.getParameter("custNo");
-        String tradeAcco = httpServletRequest.getParameter("tradeAcco");
-        String password = httpServletRequest.getParameter("password");
-
-        /**判断交易账号是否对应正确的客户编号*/
-        TradeAcco temp = tradeAccoDao.queryByTradeAcco(tradeAcco);
-        if (temp == null || !custNo.equals(temp.getCustNo())) {
-            errorInfo = "客户编号或交易账号不正确";
-        }
-
-        /**判断密码*/
-        Map map = passwordService.verificateTradeAccoPassword(tradeAcco,password);
-        if (Integer.valueOf(map.get("resultCode").toString()) == CommonConstants.RESULT_FAILURE) {
-            errorInfo = (String) map.get("errorInfo");
-        }
-
-        if(errorInfo != null) {
-            redirectAttributes.addFlashAttribute("errorInfo",errorInfo);
+        Flower flower = flowerService.queryByName((String) param.get("name"));
+        int count = Integer.parseInt(param.get("count").toString());
+        if (flower == null || flower.getCount() < count) {
+            resultCode = CommonConstants.RESULT_FAILURE;
+            errorInfo = "鲜花库存不足";
+        } else if (count <= 0) {
+            resultCode = CommonConstants.RESULT_FAILURE;
+            errorInfo = "购买数量输入错误";
         } else {
-            Subject subject = SecurityUtils.getSubject();
-            Session session = subject.getSession();
-            CustUser custUser = (CustUser) session.getAttribute("user");
-            CustInfo custInfo = custInfoService.queryByCustNo(custNo);
-            custInfo.setUserName(custUser.getUsername());
-            custInfoService.update(custInfo);
-        }
-        return viewName;
-    }
+            CustUser user = (CustUser) SecurityUtils.getSubject().getSession().getAttribute("user");
+            OrderForm orderForm = new OrderForm();
+            orderForm.setUserId(user.getId());
+            orderForm.setFlowerId(flower.getId());
+            orderForm.setCount(count);
+            orderForm.setState(Integer.parseInt(param.get("state").toString()));
 
-    /**
-     * Action 认购提交
-     * @return
-     */
-    @RequestMapping(value = "/custom/addoffertobuy")
-    @ResponseBody
-    public Object addOfferToBuy(@RequestBody Map params) throws UnsupportedEncodingException, NoSuchAlgorithmException {
-        int resultCode = CommonConstants.RESULT_SUCEESS;
-        String errorInfo = "认购成功";
-        Map data = new HashMap();
-        /** 业务交易逻辑 */
-        {
-            data = buyService.offerToBuy(params);
-        }
-        Map model = new HashMap();
-        model.put("resultCode", data.get("resultCode"));
-        model.put("errorInfo", data.get("errorInfo"));
-        model.put("data", data);
-        return model;
-    }
+            // 产品数量减少
+            flower.setCount(flower.getCount() - count);
+            flowerService.updateCount(flower);
 
-    /**
-     * Action 申购提交
-     * @return
-     */
-    @RequestMapping(value = "/custom/addapplytobuy")
-    @ResponseBody
-    public Object addApplyToBuy(@RequestBody Map params) throws UnsupportedEncodingException, NoSuchAlgorithmException {
-        int resultCode = CommonConstants.RESULT_SUCEESS;
-        String errorInfo = "申购成功";
-        Map data = new HashMap();
-        /** 业务交易逻辑 */
-        {
-            data = buyService.applyToBuy(params);
-        }
-        Map model = new HashMap();
-        model.put("resultCode", data.get("resultCode"));
-        model.put("errorInfo", data.get("errorInfo"));
-        model.put("data", data);
-        return model;
-    }
-
-    /**
-     * Action 赎回提交
-     * @return
-     */
-    @RequestMapping(value = "/custom/addatonefor")
-    @ResponseBody
-    public Object addAtoneFor(@RequestBody Map params) throws UnsupportedEncodingException, NoSuchAlgorithmException {
-        int resultCode = CommonConstants.RESULT_SUCEESS;
-        String errorInfo = "赎回成功";
-        Map data = new HashMap();
-        /** 业务交易逻辑 */
-        {
-            data = buyService.atoneFor(params);
-        }
-        Map model = new HashMap();
-        model.put("resultCode", data.get("resultCode"));
-        model.put("errorInfo", data.get("errorInfo"));
-        model.put("data", data);
-        return model;
-    }
-
-    /**
-     * Action 静态份额查询
-     * @return
-     */
-    @RequestMapping(value = "/custom/searchshare")
-    @ResponseBody
-    public Object searchShare(@RequestBody Map params) throws UnsupportedEncodingException, NoSuchAlgorithmException {
-        int resultCode = CommonConstants.RESULT_SUCEESS;
-        String errorInfo = "查询成功";
-
-        StaticShare staticShare = new StaticShare();
-        staticShare.setProductCode((String) params.get("productCode"));
-        staticShare.setTaAcco((String) params.get("taAcco"));
-        staticShare = staticShareService.queryByCodeAndAcco(staticShare);
-
-        if (staticShare == null) {
-            resultCode = CommonConstants.RESULT_FAILURE;
-            errorInfo = "未找到记录";
+            // 订单入库
+            orderFormService.create(orderForm);
         }
 
         Map model = new HashMap();
         model.put("resultCode", resultCode);
         model.put("errorInfo", errorInfo);
-        model.put("staticShare", staticShare);
         return model;
     }
 
     /**
-     * Action 静态份额查询
+     * View 鲜花订单查询页面
      * @return
      */
-    @RequestMapping(value = "/custom/searchstnav")
-    @ResponseBody
-    public Object searchStnav(@RequestBody Map params) throws UnsupportedEncodingException, NoSuchAlgorithmException {
-        int resultCode = CommonConstants.RESULT_SUCEESS;
-        String errorInfo = "查询成功";
-
-        DynamicProductInfo dynamicProductInfo = dynamicProductInfoService.queryByProductCode((String) params.get("productCode"));
-
-        if (dynamicProductInfo == null) {
-            resultCode = CommonConstants.RESULT_FAILURE;
-            errorInfo = "未找到记录";
-        }
-
-        Map model = new HashMap();
-        model.put("resultCode", resultCode);
-        model.put("errorInfo", errorInfo);
-        model.put("dynamicProductInfo", dynamicProductInfo);
-        return model;
+    @RequestMapping(value = "/custom/showpage.html")
+    public ModelAndView showpage(ModelAndView modelAndView) {
+        modelAndView.setViewName("/custom/showpage");
+        CustUser user = (CustUser) SecurityUtils.getSubject().getSession().getAttribute("user");
+        modelAndView.addObject("data", orderFormService.queryByUserId(user.getId()));
+        modelAndView.addObject("map", OrderFormStateMap.map);
+        return modelAndView;
     }
 
     /**
-     * Action 静态资金查询
+     * Action 订单取消
+     *
      * @return
      */
-    @RequestMapping(value = "/custom/searchbalance")
+    @RequestMapping(value = "/custom/cancel")
     @ResponseBody
-    public Object searchBalance(@RequestBody Map params) throws UnsupportedEncodingException, NoSuchAlgorithmException {
-        int resultCode = CommonConstants.RESULT_SUCEESS;
-        String errorInfo = "查询成功";
+    public Object cancel(@RequestBody Map param) {
+        OrderForm orderForm = orderFormService.getOrderForm(Long.parseLong(param.get("id").toString()));
+        Flower flower = flowerService.getFlower(orderForm.getFlowerId());
 
-        StaticTradeBalance staticTradeBalance = new StaticTradeBalance();
-        staticTradeBalance.setTradeAcco((String) params.get("tradeAcco"));
-        staticTradeBalance.setMoneyType((String) params.get("moneyType"));
-        staticTradeBalance = staticTradeBalanceDao.queryByTradeAccoAndMoneyType(staticTradeBalance);
-
-        if (staticTradeBalance == null) {
-            resultCode = CommonConstants.RESULT_FAILURE;
-            errorInfo = "未找到记录";
+        int state = orderForm.getState();
+        // 派送中的、已取消的、已结束的订单不允许再进行取消操作
+        if (state >= 4) {
+            Map model = new HashMap();
+            model.put("resultCode", CommonConstants.RESULT_FAILURE);
+            model.put("errorInfo", "订单状态不能进行取消");
+            return model;
         }
 
+        if (flower != null) {
+            flower.setCount(flower.getCount() + orderForm.getCount());
+            // 产品数量增加
+            flowerService.updateCount(flower);
+        }
+
+        // 更新订单状态
+        orderForm.setState(OrderFormState.CANCEL.getValue());
+        orderFormService.updateState(orderForm);
+
         Map model = new HashMap();
-        model.put("resultCode", resultCode);
-        model.put("errorInfo", errorInfo);
-        model.put("staticTradeBalance", staticTradeBalance);
+        model.put("resultCode", CommonConstants.RESULT_SUCEESS);
         return model;
     }
 }

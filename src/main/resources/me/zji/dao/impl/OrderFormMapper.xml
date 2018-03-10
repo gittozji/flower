@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="me.zji.dao.OrderFormDao">
+    <insert id="create" parameterType="OrderForm">
+        INSERT INTO `orderform`(user_id, flower_id, l_count, l_state) VALUES (#{userId}, #{flowerId}, #{count}, #{state})
+    </insert>
+
+    <select id="selectByUserId" parameterType="java.lang.Long" resultType="OrderForm">
+        SELECT <include refid="selectColumns" /> FROM `orderform` WHERE user_id = #{id}
+    </select>
+    <select id="selectAll" parameterType="java.lang.Long" resultType="OrderForm">
+        SELECT <include refid="selectColumns" /> FROM `orderform`
+    </select>
+    <select id="select" parameterType="java.lang.Long" resultType="OrderForm">
+        SELECT <include refid="selectColumns" /> FROM `orderform` WHERE id = #{id}
+    </select>
+    <update id="updateState" parameterType="OrderForm">
+        UPDATE `orderform` SET l_state = #{state} WHERE id = #{id}
+    </update>
+
+    <sql id="selectColumns">
+        id, user_id `userId`, flower_id flowerId, l_count `count`, l_state state, DATE_FORMAT(vc_date,'%Y-%m-%d %k:%i:%s') `date`
+    </sql>
+
+</mapper>

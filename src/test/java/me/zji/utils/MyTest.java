@@ -1,5 +1,6 @@
 package me.zji.utils;
 
+import me.zji.constants.OrderFormStateMap;
 import me.zji.security.PasswordUtils;
 import org.junit.Test;
 
@@ -95,5 +96,10 @@ public class MyTest {
     @Test
     public void f1() {
         System.out.println(UUID.randomUUID().toString().length());
+    }
+
+    @Test
+    public void f2() {
+        System.out.println(OrderFormStateMap.map.get(0));
     }
 }

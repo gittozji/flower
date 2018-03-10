@@ -3,7 +3,7 @@
       xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
 <head>
     <meta charset="UTF-8"/>
-    <title>管理员首页</title>
+    <title>鲜花在线订购</title>
     <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
     <link type="text/css" rel="stylesheet" th:href="@{/resources/css/materialize.min.css}"  media="screen,projection"/>
     <link type="text/css" rel="stylesheet" th:href="@{/resources/css/base_layout.css}"  media="screen,projection"/>
@@ -17,10 +17,8 @@
             <a href="#!" class="brand-logo"><i class="material-icons">cloud_queue</i>鲜花在线订购</a>
             <ul class="right">
                 <li><a th:href="@{/admin/index.html}"><i class="material-icons left">account_balance</i>当前状态</a></li>
-                <li shiro:hasRole="admin_trade"><a th:href="@{/admin/trade/index.html}"><i class="material-icons left">gavel</i>业务交易</a></li>
                 <li class="active" shiro:hasRole="admin_maintain"><a th:href="@{/admin/maintain/index.html}"><i class="material-icons left">view_quilt</i>鲜花管理</a></li>
-                <li shiro:hasRole="admin_process"><a th:href="@{/admin/process/index.html}"><i class="material-icons left">call_merge</i>流程控制</a></li>
-                <li shiro:hasRole="admin_user"><a th:href="@{/admin/user/index.html}"><i class="material-icons left">vpn_key</i>新增</a></li>
+                <li shiro:hasRole="admin_process"><a th:href="@{/admin/process/index.html}"><i class="material-icons left">call_merge</i>派送管理</a></li>
                 <li th:if="${session.user != null}">
                     <a class="dropdown-button nav-user" href="#!" data-activates="dropdown_id"><i class="material-icons left">person</i><span th:text="${session.user.nikename}"></span><i class="material-icons right">arrow_drop_down</i></a>
                     <ul id="dropdown_id" class="dropdown-content">
@@ -51,12 +49,12 @@
                         <span class="card-title" th:text="${flower.getName()}">Card Title</span>
                     </div>
                     <div class="card-content">
-                        <p th:text="${'价格：' + flower.getPrice()}"></p>
-                        <p th:text="${'数量：' + flower.getCount()}"></p>
+                        <b th:text="${'价格：' + flower.getPrice()}"></b>
+                        <b th:text="${'数量：' + flower.getCount()}" style="float: right"></b>
                     </div>
                     <div class="card-action">
-                        <a href="#">删除</a>
-                        <a href="#">编辑</a>
+                        <a href="javascript:void(0)" onclick="del(this);">删除</a>
+                        <a href="javascript:void(0)" onclick="edit(this);">编辑</a>
                     </div>
                 </div>
             </div>
@@ -78,41 +76,25 @@
      |                页 面 渲 染               |
      ============================================*/
 
-    $(document).ready(function(){
-        /** 表单提交 */
-        $("#addForm").validate({
-            submitHandler: function (form) {
-                $("#commit_id").addClass("disabled");
-
-                var url = /*[[@{/file/upload.json}]]*/"";
-                var fileId = upload($("#file_id").get(0).files[0], url);
-                if (fileId == null) {
-                    Materialize.toast('文件上传失败', 3000,'',function(){
-                        $("#commit_id").removeClass("disabled");
-                    });
-                    return false;
-                }
-
-                $.ajaxSetup({contentType: "application/json; charset=utf-8"});
-                var actionUrl = /*[[@{/admin/maintain/add.json}]]*/"";
-                var params = $(form).serializeJson();
-                params["fid"] = fileId;
-                $.post(actionUrl, JSON.stringify(params), function (response) {
-                    if(response.resultCode == 1) { // 成功
-                        Materialize.toast('添加成功', 2000,'',function() {
-                            $("#commit_id").removeClass("disabled");
-                        });
-                        window.location.reload(); //成功后刷新界面
-                    } else { // 失败
-                        Materialize.toast(response.errorInfo, 3000,'',function(){
-                            $("#commit_id").removeClass("disabled");
-                        });
-                    }
+    function del(t) {
+        var name = $(t).parents(".card").find(".card-title").text();
+        $.ajaxSetup({contentType: "application/json; charset=utf-8"});
+        var actionUrl = /*[[@{/admin/maintain/delete.json}]]*/"";
+        var params = {name: name};
+        $.post(actionUrl, JSON.stringify(params), function (response) {
+            if(response.resultCode == 1) { // 成功
+                Materialize.toast('删除成功', 2000,'',function() {
+                    $(t).parents(".card").remove();
                 });
+            } else { // 失败
+                Materialize.toast(response.errorInfo, 3000,'');
             }
         });
+    }
 
-    });
+    function edit(t) {
+        Materialize.toast('这功能不实用，不做！', 3000,'');
+    }
     /*]]>*/
 </script>
 </body>

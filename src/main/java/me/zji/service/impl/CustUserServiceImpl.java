@@ -23,6 +23,7 @@ public class CustUserServiceImpl implements CustUserService {
         CustUser custUser = new CustUser();
         User user = userDao.queryByUsername(username);
         CustInfo custInfo = custInfoDao.queryByUsername(username);
+        custUser.setId(user.getId());
         custUser.setUsername(user.getUsername());
         custUser.setNikename(user.getNikename());
         custUser.setType(user.getType());
