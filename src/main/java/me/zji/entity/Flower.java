@@ -2,7 +2,7 @@ package me.zji.entity;
 
 /**
  * 产品（鲜花）实体
- * Created by imyu on 2018-03-08.
+ * Created by qian yun on 2018-03-08.
  */
 public class Flower extends Id {
     String name;

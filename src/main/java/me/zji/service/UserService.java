@@ -5,7 +5,7 @@ import me.zji.entity.UserDetail;
 
 /**
  * 用户服务
- * Created by imyu on 2017/2/11.
+ * Created by qian yun on 2018/3/8.
  */
 public interface UserService {
     User getUser(Long id);

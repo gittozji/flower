@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 
 /**
  * 客户用户关键信息服务
- * Created by imyu on 2017/3/5.
+ * Created by qian yun on 2018/3/5.
  */
 @Service
 public class CustUserServiceImpl implements CustUserService {

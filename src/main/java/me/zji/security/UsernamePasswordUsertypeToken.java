@@ -4,7 +4,7 @@ import org.apache.shiro.authc.UsernamePasswordToken;
 
 /**
  * 用户名密码类型Token
- * Created by imyu on 2017/2/12.
+ * Created by qian yun on 2018/3/8.
  */
 public class UsernamePasswordUsertypeToken extends UsernamePasswordToken {
     /**

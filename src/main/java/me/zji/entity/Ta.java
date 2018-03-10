@@ -2,7 +2,7 @@ package me.zji.entity;
 
 /**
  * Ta
- * Created by imyu on 2017/3/1.
+ * Created by qian yun on 2018/3/6.
  */
 public class Ta extends Id {
     String taCode;

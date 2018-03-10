@@ -6,7 +6,7 @@ import java.util.Set;
 
 /**
  * 角色
- * Created by imyu on 2017/2/12.
+ * Created by qian yun on 2018/3/6.
  */
 public class Role extends Id {
     private String code;

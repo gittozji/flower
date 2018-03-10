@@ -10,7 +10,7 @@ import java.security.NoSuchAlgorithmException;
 
 /**
  * 密码工具
- * Created by imyu on 2017/2/14.
+ * Created by qian yun on 2018/3/6.
  */
 public class PasswordUtils {
     public static String encryptPassword(String src) throws NoSuchAlgorithmException, UnsupportedEncodingException {

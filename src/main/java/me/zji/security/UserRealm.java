@@ -17,7 +17,7 @@ import java.util.List;
 
 /**
  * Shiro Realm
- * Created by imyu on 2017/2/12.
+ * Created by qian yun on 2018/3/6.
  */
 public class UserRealm extends AuthorizingRealm{
     @Autowired

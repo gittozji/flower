@@ -1,5 +1,5 @@
 /**
- * Created by imyu on 2017/2/16.
+ * Created by qian yun on 2018/3/8.
  */
 /**表单序列号为json对象*/
 (function($){

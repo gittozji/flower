@@ -2,7 +2,7 @@ package me.zji.entity;
 
 /**
  * 银行账户信息
- * Created by imyu on 2017/3/4.
+ * Created by qian yun on 2018/3/10.
  */
 public class BankAccoInfo extends Id {
     String name;

@@ -2,7 +2,7 @@ package me.zji.entity;
 
 /**
  * 动态产品信息
- * Created by imyu on 2017/3/13.
+ * Created by qian yun on 2018/3/7.
  */
 public class DynamicProductInfo extends Id {
     String productCode;

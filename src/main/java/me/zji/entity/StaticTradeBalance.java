@@ -2,7 +2,7 @@ package me.zji.entity;
 
 /**
  * 交易账号静态资金
- * Created by imyu on 2017/3/5.
+ * Created by qian yun on 2018/3/6.
  */
 public class StaticTradeBalance extends Id {
     String tradeAcco;

@@ -2,7 +2,7 @@ package me.zji.entity;
 
 /**
  * 静态份额
- * Created by imyu on 2017/3/14.
+ * Created by qian yun on 2018/3/6.
  */
 public class StaticShare extends Id {
     String productCode;

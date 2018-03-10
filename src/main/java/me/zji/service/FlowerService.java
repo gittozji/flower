@@ -5,7 +5,7 @@ import me.zji.entity.Flower;
 import java.util.List;
 
 /**
- * Created by imyu on 2018-03-08.
+ * Created by qian yun on 2018-03-08.
  */
 public interface FlowerService {
     Flower getFlower(Long id);

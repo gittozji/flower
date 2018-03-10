@@ -8,7 +8,7 @@ import java.util.Map;
 
 /**
  * 管理员用户服务
- * Created by imyu on 2017/2/23.
+ * Created by qian yun on 2018/3/8.
  */
 public interface AdminUserService {
     /**

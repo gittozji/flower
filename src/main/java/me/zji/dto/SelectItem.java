@@ -2,7 +2,7 @@ package me.zji.dto;
 
 /**
  * 选择框的条目
- * Created by imyu on 2017/2/24.
+ * Created by qian yun on 2018/3/9.
  */
 public class SelectItem {
     String item;

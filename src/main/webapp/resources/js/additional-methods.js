@@ -1,5 +1,5 @@
 /**
- * Created by imyu on 2017/2/16.
+ * Created by qian yun on 2018/3/8.
  */
 
 jQuery.validator.addMethod("number", function(value, element) {

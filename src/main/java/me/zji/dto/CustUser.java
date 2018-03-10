@@ -4,7 +4,7 @@ import me.zji.entity.Id;
 
 /**
  * 客户用户关键信息
- * Created by imyu on 2017/3/5.
+ * Created by qian yun on 2018/3/9.
  */
 public class CustUser extends Id {
     String username;

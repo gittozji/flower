@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
+<html th:if="${session.user != null}" xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
 <head>
     <meta charset="UTF-8"/>
@@ -14,7 +14,7 @@
 <div class="navbar-fixed">
     <nav>
         <div class="nav-wrapper">
-            <a href="#!" class="brand-logo"><i class="material-icons">cloud_queue</i>鲜花在线订购</a>
+            <a href="#!" class="brand-logo"><i class="material-icons">store</i>鲜花在线订购</a>
             <ul class="right">
                 <li class="active"><a th:href="@{/custom/my.html}"><i class="material-icons left">vpn_key</i>个人资料</a></li>
                 <li><a th:href="@{/custom/index.html}"><i class="material-icons left">view_quilt</i>鲜花下单</a></li>

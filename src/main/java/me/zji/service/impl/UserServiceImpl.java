@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 
 /**
  * 用户服务
- * Created by imyu on 2017/2/11.
+ * Created by qian yun on 2018/3/8.
  */
 @Service
 public class UserServiceImpl implements UserService {

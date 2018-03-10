@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 /**
  * 自己实现的用户凭证匹配器
  * 比SimpleCredentialsMatcher还要Simple
- * Created by imyu on 2017/2/14.
+ * Created by qian yun on 2018/3/6.
  */
 @Component
 public class NaiveCredentialsMatcher implements CredentialsMatcher {

@@ -5,7 +5,7 @@ import org.mybatis.spring.annotation.MapperScan;
 
 /**
  * 用户接口 Dao
- * Created by imyu on 2017/2/11.
+ * Created by qian yun on 2018/3/9.
  */
 
 public interface UserDao {

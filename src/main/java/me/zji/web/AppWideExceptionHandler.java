@@ -11,7 +11,7 @@ import java.util.Map;
 
 /**
  * 控制器异常处理类
- * Created by imyu on 2017/3/19.
+ * Created by qian yun on 2018/3/8.
  */
 @ControllerAdvice
 public class AppWideExceptionHandler {

@@ -1,7 +1,7 @@
 package me.zji.entity;
 
 /**
- * Created by imyu on 2017/3/3.
+ * Created by qian yun on 2018/3/7.
  */
 public class ProductInfo extends Id {
     String productCode;

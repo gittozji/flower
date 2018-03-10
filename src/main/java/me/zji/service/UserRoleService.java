@@ -6,7 +6,7 @@ import java.util.List;
 
 /**
  * 用户-角色服务
- * Created by imyu on 2017/2/12.
+ * Created by qian yun on 2018/3/8.
  */
 public interface UserRoleService {
     /**

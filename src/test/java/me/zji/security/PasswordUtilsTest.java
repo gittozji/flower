@@ -3,7 +3,7 @@ package me.zji.security;
 import org.junit.Test;
 
 /**
- * Created by imyu on 2017/2/14.
+ * Created by qian yun on 2018/3/8.
  */
 public class PasswordUtilsTest {
     @Test

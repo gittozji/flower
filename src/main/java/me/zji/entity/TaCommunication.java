@@ -2,7 +2,7 @@ package me.zji.entity;
 
 /**
  * TA通信
- * Created by imyu on 2017/3/9.
+ * Created by qian yun on 2018/3/6.
  */
 public class TaCommunication extends Id {
     String taCode;

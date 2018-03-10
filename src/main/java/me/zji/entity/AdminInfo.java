@@ -2,7 +2,7 @@ package me.zji.entity;
 
 /**
  * 管理员信息
- * Created by imyu on 2017/2/22.
+ * Created by qian yun on 2018/3/9.
  */
 public class AdminInfo extends Id{
     private String username;

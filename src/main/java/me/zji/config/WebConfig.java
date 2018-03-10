@@ -26,7 +26,7 @@ import java.util.Set;
 
 /**
  * SpringMVC 主配置
- * Created by imyu on 2017/1/20.
+ * Created by qian yun on 2018/3/8.
  */
 @Configuration
 @EnableWebMvc

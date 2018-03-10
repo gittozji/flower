@@ -32,7 +32,7 @@ import java.security.NoSuchAlgorithmException;
 
 /**
  * 没有权限管理的页面控制器
- * Created by imyu on 2017/2/17.
+ * Created by qian yun on 2018/3/8.
  */
 @Controller
 public class AnonController {

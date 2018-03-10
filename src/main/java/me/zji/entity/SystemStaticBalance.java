@@ -2,7 +2,7 @@ package me.zji.entity;
 
 /**
  * 系统静态资金信息
- * Created by imyu on 2017/3/5.
+ * Created by qian yun on 2018/3/5.
  */
 public class SystemStaticBalance extends Id {
     String bankAcco;

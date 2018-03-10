@@ -6,7 +6,7 @@ import java.util.Map;
 
 /**
  * 流程控制
- * Created by imyu on 2017/2/26.
+ * Created by qian yun on 2018/3/10.
  */
 public class DealProcess extends Id {
     String procedurCode;

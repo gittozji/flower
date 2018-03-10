@@ -7,7 +7,7 @@ import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatche
 
 /**
  * Servlet容器配置入口
- * Created by imyu on 2017/1/20.
+ * Created by qian yun on 2018/3/8.
  */
 public class FundTradeWebApplicationInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
     @Override

@@ -19,8 +19,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 客户页面控制器（7*24小时渠道）
- * Created by imyu on 2017/3/15.
+ * 客户相关的请求控制器
+ * Created by qian yun on 2018/3/8.
  */
 @Controller
 public class CustomController {

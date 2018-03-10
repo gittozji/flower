@@ -20,7 +20,7 @@ import java.util.Properties;
 
 /**
  * Spring-Mybatis 配置
- * Created by imyu on 2017/2/11.
+ * Created by qian yun on 2018/3/8.
  */
 @Configuration
 @ComponentScan("me.zji.service.**")

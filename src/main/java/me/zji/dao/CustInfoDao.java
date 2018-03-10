@@ -6,7 +6,7 @@ import java.util.Map;
 
 /**
  * 客户信息 DAO
- * Created by imyu on 2017/3/4.
+ * Created by qian yun on 2018/3/9.
  */
 public interface CustInfoDao {
     void create(Map params);

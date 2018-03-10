@@ -22,7 +22,7 @@ import java.util.Map;
 
 /**
  * Shiro 配置
- * Created by imyu on 2017/2/12.
+ * Created by qian yun on 2018/3/8.
  */
 @Configuration
 @ComponentScan("me.zji.security")

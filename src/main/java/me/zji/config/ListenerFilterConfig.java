@@ -13,7 +13,7 @@ import java.util.Map;
 
 /**
  * Listener、Filter配置
- * Created by imyu on 2017/2/11.
+ * Created by qian yun on 2018/3/8.
  */
 public class ListenerFilterConfig implements WebApplicationInitializer{
     public void onStartup(ServletContext servletContext) throws ServletException {

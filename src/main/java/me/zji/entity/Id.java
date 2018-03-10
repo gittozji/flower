@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 /**
  * Id 模型
- * Created by imyu on 2017/2/12.
+ * Created by qian yun on 2018/3/7.
  */
 public class Id implements Serializable {
 
