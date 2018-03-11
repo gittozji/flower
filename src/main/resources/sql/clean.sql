@@ -1,0 +1,7 @@
+DROP TABLE IF EXISTS `admininfo`;
+DROP TABLE IF EXISTS `orderform`;
+DROP TABLE IF EXISTS `flower`;
+DROP TABLE IF EXISTS `user_detail`;
+DROP TABLE IF EXISTS `user_role`;
+DROP TABLE IF EXISTS `role`;
+DROP TABLE IF EXISTS `user`;
