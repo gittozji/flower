@@ -17,10 +17,8 @@
             <a href="#!" class="brand-logo"><i class="material-icons">store</i>鲜花在线订购</a>
             <ul class="right">
                 <li><a th:href="@{/admin/index.html}"><i class="material-icons left">account_balance</i>当前状态</a></li>
-                <li shiro:hasRole="admin_trade"><a th:href="@{/admin/trade/index.html}"><i class="material-icons left">gavel</i>业务交易</a></li>
                 <li class="active" shiro:hasRole="admin_maintain"><a th:href="@{/admin/maintain/index.html}"><i class="material-icons left">view_quilt</i>鲜花管理</a></li>
-                <li shiro:hasRole="admin_process"><a th:href="@{/admin/process/index.html}"><i class="material-icons left">call_merge</i>流程控制</a></li>
-                <li shiro:hasRole="admin_user"><a th:href="@{/admin/user/index.html}"><i class="material-icons left">vpn_key</i>新增</a></li>
+                <li shiro:hasRole="admin_process"><a th:href="@{/admin/process/index.html}"><i class="material-icons left">call_merge</i>派送管理</a></li>
                 <li th:if="${session.user != null}">
                     <a class="dropdown-button nav-user" href="#!" data-activates="dropdown_id"><i class="material-icons left">person</i><span th:text="${session.user.nikename}"></span><i class="material-icons right">arrow_drop_down</i></a>
                     <ul id="dropdown_id" class="dropdown-content">
@@ -119,8 +117,8 @@
                     if(response.resultCode == 1) { // 成功
                         Materialize.toast('添加成功', 2000,'',function() {
                             $("#commit_id").removeClass("disabled");
+                            window.location.reload(); //成功后刷新界面
                         });
-                        window.location.reload(); //成功后刷新界面
                     } else { // 失败
                         Materialize.toast(response.errorInfo, 3000,'',function(){
                             $("#commit_id").removeClass("disabled");
